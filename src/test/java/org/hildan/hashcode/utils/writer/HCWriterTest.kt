@@ -7,42 +7,36 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
-import org.junit.experimental.theories.DataPoints
-import org.junit.experimental.theories.Theories
-import org.junit.experimental.theories.Theory
-import org.junit.runner.RunWith
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
 
-@RunWith(Theories::class)
 class HCWriterTest {
 
     private lateinit var writer: HCWriter
 
-    private class Input {
-        var num: Int = 0
-        var items: Array<String>? = null
+    private class Problem(
+        var num: Int,
+        var items: Array<String>
+    ) {
+        fun solve() = items.map { s -> s + num }
     }
 
     @Before
     fun setUp() {
         writer = HCWriter {
-            readInput().let { input ->
-                input.items!!.map { s -> s + input.num }
-            }
+            readProblem().solve()
         }
     }
 
-    private fun HCReader.readInput(): Input {
-        val input = Input()
-        input.num = nextInt()
-        input.items = nextLineAsStringArray()
-        return input
+    private fun HCReader.readProblem(): Problem {
+        val num = nextInt()
+        val items = nextLineAsStringArray()
+        return Problem(num, items)
     }
 
     @Test
-    fun accept_success() {
+    fun solveAndWrite() {
         writer.solveAndWrite(TEST_FILENAME)
         val outputFilePath = Paths.get(EXPECTED_OUTPUT_FILENAME)
         assertTrue(Files.exists(outputFilePath))
@@ -52,13 +46,6 @@ class HCWriterTest {
         assertEquals("def42", lines[1])
         assertEquals("ghi42", lines[2])
         Files.delete(Paths.get(EXPECTED_OUTPUT_FILENAME))
-    }
-
-    class Expectation(val input: String, val expectedOutput: String)
-
-    @Theory
-    fun computeOutputFilename(expectation: Expectation) {
-        assertEquals(expectation.expectedOutput, computeOutputFilename(expectation.input))
     }
 
     companion object {
@@ -86,22 +73,6 @@ class HCWriterTest {
         @JvmStatic
         fun deleteTestInputFile() {
             Files.delete(Paths.get(TEST_FILENAME))
-        }
-
-        @JvmStatic
-        @DataPoints
-        fun createDataPoints(): Array<Expectation> {
-            return arrayOf(
-                Expectation("myInput", "myInput.out"),
-                Expectation("myInput.in", "myInput.out"),
-                Expectation("myInput.in.stuff", "myInput.in.stuff.out"),
-                Expectation("inputs/myInput", "outputs/myInput.out"),
-                Expectation("root/inputs/myInput", "root/outputs/myInput.out"),
-                Expectation("root/inputsweird/myInput", "root/inputsweird/myInput.out"),
-                Expectation("inputs/myInput.in", "outputs/myInput.out"),
-                Expectation("weirdinputs/myInput", "weirdinputs/myInput.out"),
-                Expectation("weirdinputs/myInput.in", "weirdinputs/myInput.out")
-            )
         }
     }
 }
