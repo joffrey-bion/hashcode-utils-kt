@@ -1,7 +1,7 @@
 package org.hildan.hashcode.utils.examples.satellites
 
-import org.hildan.hashcode.utils.parser.HCParser
-import org.hildan.hashcode.utils.parser.context.ParsingContext
+import org.hildan.hashcode.utils.reader.HCReader
+import org.hildan.hashcode.utils.reader.readHashCodeInput
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -25,7 +25,7 @@ class Satellites {
             + "175889 8260\n" // The Eiffel Tower.
             + "3300 3599\n")  // The images need to be taken in the last 5 minutes.
 
-    private fun ParsingContext.readSimulation(): Simulation {
+    private fun HCReader.readSimulation(): Simulation {
         val nTurns = nextInt()
         val simulation = Simulation(nTurns)
         val S = nextInt()
@@ -35,7 +35,7 @@ class Satellites {
         return simulation
     }
 
-    private fun ParsingContext.readSatellite(): Satellite {
+    private fun HCReader.readSatellite(): Satellite {
         val latitude = nextInt()
         val longitude = nextInt()
         val v0 = nextInt()
@@ -50,7 +50,7 @@ class Satellites {
         )
     }
 
-    private fun ParsingContext.readImageCollection(): ImageCollection {
+    private fun HCReader.readImageCollection(): ImageCollection {
         val value = nextInt()
         val imageCollection = ImageCollection(value)
         val L = nextInt()
@@ -60,13 +60,13 @@ class Satellites {
         return imageCollection
     }
 
-    private fun ParsingContext.readLocation(collection: ImageCollection): Location {
+    private fun HCReader.readLocation(collection: ImageCollection): Location {
         val latitude = nextInt()
         val longitude = nextInt()
         return Location(collection, latitude, longitude)
     }
 
-    private fun ParsingContext.readRange(): IntArray {
+    private fun HCReader.readRange(): IntArray {
         val latitude = nextInt()
         val longitude = nextInt()
         return intArrayOf(latitude, longitude)
@@ -74,8 +74,7 @@ class Satellites {
 
     @Test
     fun test_parser() {
-        val parser = HCParser { readSimulation() }
-        val problem = parser.parse(input)
+        val problem = readHashCodeInput(input) { readSimulation() }
 
         assertEquals(3600, problem.nTurns.toLong())
         assertEquals(2, problem.satellites.size.toLong())

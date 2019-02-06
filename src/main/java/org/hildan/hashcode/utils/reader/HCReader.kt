@@ -1,9 +1,33 @@
-package org.hildan.hashcode.utils.parser.context
+package org.hildan.hashcode.utils.reader
 
 import java.io.Closeable
+import java.io.FileReader
 import java.io.IOException
 import java.io.LineNumberReader
 import java.io.Reader
+import java.io.StringReader
+
+val DEFAULT_DELIMITER = Regex("\\s")
+
+/**
+ * Reads an instance of [P] from the given [input] text. This function provides an [HCReader] using the given
+ * [tokenDelimiter] regex as delimiter.
+ */
+fun <P> readHashCodeInput(
+    input: String,
+    tokenDelimiter: Regex = DEFAULT_DELIMITER,
+    readProblem: HCReader.() -> P
+): P = HCReader(StringReader(input), tokenDelimiter).use { it.readProblem() }
+
+/**
+ * Reads an instance of [P] from the file with the given [filename]. This function provides an [HCReader] using the
+ * given [tokenDelimiter] regex as delimiter.
+ */
+fun <P> readHashCodeInputFile(
+    filename: String,
+    tokenDelimiter: Regex = DEFAULT_DELIMITER,
+    readProblem: HCReader.() -> P
+): P = HCReader(FileReader(filename), tokenDelimiter).use { it.readProblem() }
 
 /**
  * Provides convenience methods to parse the input data, with clear error handling and line numbering.
@@ -11,7 +35,7 @@ import java.io.Reader
  * @param reader the reader to use to read the input
  * @param tokenDelimiter the delimiter to use to separate tokens
  */
-class ParsingContext(reader: Reader, private val tokenDelimiter: Regex = Regex("\\s")) : Closeable {
+class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIMITER) : Closeable {
 
     private val reader: LineNumberReader = LineNumberReader(reader).apply { lineNumber = 0 }
 
@@ -128,14 +152,20 @@ class ParsingContext(reader: Reader, private val tokenDelimiter: Regex = Regex("
     private fun fetchNextLine() {
         try {
             if (hasMoreTokenInCurrentLine()) {
-                throw IncompleteLineReadException(lineNumber, remainingInputOnCurrentLine())
+                throw IncompleteLineReadException(
+                    lineNumber,
+                    remainingInputOnCurrentLine()
+                )
             }
             val nextLine = reader.readLine() ?: throw NoMoreLinesToReadException()
             currentLineTokens = if (nextLine.isEmpty()) emptyArray() else nextLine.split(tokenDelimiter).toTypedArray()
             currentLineString = nextLine
             nextTokenIndex = 0
         } catch (e: IOException) {
-            throw InputParsingException("An error occurred while reading the input line $lineNumber", e)
+            throw InputParsingException(
+                "An error occurred while reading the input line $lineNumber",
+                e
+            )
         }
     }
 
@@ -156,9 +186,16 @@ class ParsingContext(reader: Reader, private val tokenDelimiter: Regex = Regex("
                 throw IncompleteInputReadException(nbLinesLeft)
             }
         } catch (e: IOException) {
-            throw InputParsingException("An error occurred while consuming the end of the input", e)
+            throw InputParsingException(
+                "An error occurred while consuming the end of the input",
+                e
+            )
         }
     }
 
-    private fun parseError(msg: String): Nothing = throw InputParsingException(lineNumber, nextTokenIndex, msg)
+    private fun parseError(msg: String): Nothing = throw InputParsingException(
+        lineNumber,
+        nextTokenIndex,
+        msg
+    )
 }

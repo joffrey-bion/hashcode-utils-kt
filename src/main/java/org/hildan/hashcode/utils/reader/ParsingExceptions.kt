@@ -1,4 +1,4 @@
-package org.hildan.hashcode.utils.parser.context
+package org.hildan.hashcode.utils.reader
 
 /**
  * Thrown if the parsing of the input fails.

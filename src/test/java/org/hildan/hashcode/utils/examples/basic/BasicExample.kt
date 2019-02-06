@@ -1,20 +1,17 @@
 package org.hildan.hashcode.utils.examples.basic
 
 import kotlinx.coroutines.runBlocking
-import org.hildan.hashcode.utils.parser.HCParser
-import org.hildan.hashcode.utils.parser.context.ParsingContext
-import org.hildan.hashcode.utils.runner.HCRunner
-import org.hildan.hashcode.utils.solver.HCSolver
+import org.hildan.hashcode.utils.reader.HCReader
+import org.hildan.hashcode.utils.runner.solveInParallel
 import java.util.ArrayList
 
 fun main(args: Array<String>) = runBlocking {
-    val parser = HCParser { readProblem() }
-    val solver = HCSolver(parser) { it.solve() }
-    val runner = HCRunner(solver::accept)
-    runner.run(*args)
+    solveInParallel(*args) {
+        readProblem().solve()
+    }
 }
 
-private fun ParsingContext.readProblem(): Problem {
+private fun HCReader.readProblem(): Problem {
     val P = nextInt()
     val C = nextInt()
     val problem = Problem(C)
@@ -23,7 +20,7 @@ private fun ParsingContext.readProblem(): Problem {
     return problem
 }
 
-private fun ParsingContext.readPoint(): Point {
+private fun HCReader.readPoint(): Point {
     val x = nextDouble()
     val y = nextDouble()
     return Point(x, y)

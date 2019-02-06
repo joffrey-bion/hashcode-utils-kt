@@ -12,9 +12,9 @@ enum class UncaughtExceptionsLogger(
     /**
      * Does nothing with the stack traces.
      *
-     * Warning: when using this policy, the caller of the [HCRunner] will not be aware of uncaught exceptions
-     * thrown within the solver. This policy should only be used when the solver is guaranteed not to throw any
-     * exception (for instance if it wraps everything in a try/catch block)
+     * Warning: when using this policy, uncaught exceptions thrown during the problem resolution will be silently
+     * ignored. This policy should only be used when the solver is guaranteed not to throw any exception (for instance
+     * if it wraps everything in a try/catch block)
      */
     NOOP(false, false),
 
@@ -34,7 +34,7 @@ enum class UncaughtExceptionsLogger(
      */
     STDERR_AND_SLF4J(true, true);
 
-    fun log(message: String) {
+    internal fun log(message: String) {
         if (logViaSlf4J) {
             logger.error(message)
         }
@@ -43,7 +43,7 @@ enum class UncaughtExceptionsLogger(
         }
     }
 
-    fun log(message: String, t: Throwable) {
+    internal fun log(message: String, t: Throwable) {
         if (logViaSlf4J) {
             logger.error(message, t)
         }

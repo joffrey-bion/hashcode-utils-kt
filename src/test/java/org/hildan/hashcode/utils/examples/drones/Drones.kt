@@ -1,7 +1,7 @@
 package org.hildan.hashcode.utils.examples.drones
 
-import org.hildan.hashcode.utils.parser.HCParser
-import org.hildan.hashcode.utils.parser.context.ParsingContext
+import org.hildan.hashcode.utils.reader.HCReader
+import org.hildan.hashcode.utils.reader.readHashCodeInput
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -27,7 +27,7 @@ class DronesTestKt {
                     + "1\n"      // Third order contains 1 item
                     + "2\n")     // Items of product types: 2
 
-    private fun ParsingContext.readSimulation(): Simulation {
+    private fun HCReader.readSimulation(): Simulation {
         val nRows = nextInt()
         val nCols = nextInt()
         val D = nextInt()
@@ -47,7 +47,7 @@ class DronesTestKt {
         return simulation
     }
 
-    private fun ParsingContext.readWarehouse(): Warehouse {
+    private fun HCReader.readWarehouse(): Warehouse {
         val row = nextInt()
         val col = nextInt()
         val warehouse = Warehouse(row, col)
@@ -55,7 +55,7 @@ class DronesTestKt {
         return warehouse
     }
 
-    private fun ParsingContext.readOrder(P: Int): Order {
+    private fun HCReader.readOrder(P: Int): Order {
         val x = nextInt()
         val y = nextInt()
         val order = Order(x, y, P)
@@ -66,8 +66,7 @@ class DronesTestKt {
 
     @Test
     fun test() {
-        val parser = HCParser { readSimulation() }
-        val problem = parser.parse(input)
+        val problem = readHashCodeInput(input) { readSimulation() }
 
         assertEquals(100, problem.nRows.toLong())
         assertEquals(100, problem.nCols.toLong())

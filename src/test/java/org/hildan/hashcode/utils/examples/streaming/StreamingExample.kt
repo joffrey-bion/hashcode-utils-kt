@@ -1,7 +1,7 @@
 package org.hildan.hashcode.utils.examples.streaming
 
-import org.hildan.hashcode.utils.parser.HCParser
-import org.hildan.hashcode.utils.parser.context.ParsingContext
+import org.hildan.hashcode.utils.reader.HCReader
+import org.hildan.hashcode.utils.reader.readHashCodeInput
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -20,7 +20,7 @@ class StreamingExample {
             + "4 0 500\n"  // 500 requests for video 4 coming from endpoint 0.
             + "1 0 1000")  // 1000 requests for video 1 coming from endpoint 0.
 
-    private fun ParsingContext.readStreamingProblem(): StreamingProblem {
+    private fun HCReader.readStreamingProblem(): StreamingProblem {
         val problem = StreamingProblem().apply {
             nVideos = nextInt()
             nEndpoints = nextInt()
@@ -34,7 +34,7 @@ class StreamingExample {
         return problem
     }
 
-    private fun ParsingContext.readEndpoint(): Endpoint {
+    private fun HCReader.readEndpoint(): Endpoint {
         val endpoint = Endpoint().apply {
             dcLatency = nextInt()
         }
@@ -44,12 +44,12 @@ class StreamingExample {
         return endpoint
     }
 
-    private fun ParsingContext.readLatency(): Latency = Latency().apply {
+    private fun HCReader.readLatency(): Latency = Latency().apply {
         cacheId = nextInt()
         latency = nextInt()
     }
 
-    private fun ParsingContext.readRequest(): RequestDesc = RequestDesc().apply {
+    private fun HCReader.readRequest(): RequestDesc = RequestDesc().apply {
         videoId = nextInt()
         endpointId = nextInt()
         count = nextInt()
@@ -57,8 +57,7 @@ class StreamingExample {
 
     @Test
     fun test_parser() {
-        val parser = HCParser { readStreamingProblem() }
-        val problem = parser.parse(input)
+        val problem = readHashCodeInput(input) { readStreamingProblem() }
 
         assertEquals(5, problem.nVideos.toLong())
         assertEquals(2, problem.nEndpoints.toLong())

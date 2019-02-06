@@ -1,11 +1,9 @@
-package org.hildan.hashcode.utils.parser
-
-import org.hildan.hashcode.utils.parser.context.ParsingContext
-import org.junit.Test
+package org.hildan.hashcode.utils.reader
 
 import org.junit.Assert.assertEquals
+import org.junit.Test
 
-class HCParserTest {
+class HCReaderGlobalTest {
 
     private val DELTA = 0.0001
 
@@ -37,29 +35,27 @@ class HCParserTest {
         var y: Double = 0.0
     }
 
-    private fun ParsingContext.readProblem(): Problem = Problem().apply {
+    private fun HCReader.readProblem(): Problem = Problem().apply {
         param1 = nextInt()
         param2 = nextInt()
         nShapes = nextInt()
         shapes = Array(nShapes) { readShape() }
     }
 
-    private fun ParsingContext.readShape(): Shape = Shape().apply {
+    private fun HCReader.readShape(): Shape = Shape().apply {
         name = nextString()
         nPoints = nextInt()
         points = List(nPoints) { readPoint() }
     }
 
-    private fun ParsingContext.readPoint(): Point = Point().apply {
+    private fun HCReader.readPoint(): Point = Point().apply {
         x = nextDouble()
         y = nextDouble()
     }
 
     @Test
     fun test() {
-
-        val hcParser = HCParser { readProblem() }
-        val problem = hcParser.parse(CONTENT)
+        val problem = readHashCodeInput(CONTENT) { readProblem() }
 
         assertEquals(42, problem.param1.toLong())
         assertEquals(24, problem.param2.toLong())

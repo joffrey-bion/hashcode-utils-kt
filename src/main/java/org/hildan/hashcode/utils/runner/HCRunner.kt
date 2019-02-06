@@ -3,17 +3,29 @@ package org.hildan.hashcode.utils.runner
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.hildan.hashcode.utils.reader.HCReader
+import org.hildan.hashcode.utils.writer.solveHashCodeProblem
 import java.util.ArrayList
 
-suspend fun <I> solveInParallel(
-    vararg inputs: I,
-    solve: (I) -> Unit,
-    exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR
+suspend fun solveInParallel(
+    vararg filenames: String,
+    exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR,
+    readAndSolve: HCReader.() -> Iterable<CharSequence>
 ) {
-    HCRunner(solve, exceptionsLogger).run(*inputs)
+    runInParallel(*filenames, exceptionsLogger = exceptionsLogger) {
+        solveHashCodeProblem(it, readAndSolve = readAndSolve)
+    }
 }
 
-data class ExecException<I>(val input: I, val exception: Exception)
+suspend fun <I> runInParallel(
+    vararg inputs: I,
+    exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR,
+    block: (I) -> Unit
+) {
+    HCRunner(exceptionsLogger, block).run(*inputs)
+}
+
+private data class ExecException<I>(val input: I, val exception: Exception)
 
 /**
  * `HCRunner` provides a simple way to execute a given solve on multiple inputs in separate parallel tasks.
@@ -27,9 +39,9 @@ data class ExecException<I>(val input: I, val exception: Exception)
  * @param solve the solve to run on the inputs given to [run]
  * @param exceptionsLogger defines what to do with uncaught exceptions thrown by [solve]
  */
-class HCRunner<I>(
-    private val solve: (I) -> Unit,
-    private val exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR
+internal class HCRunner<I>(
+    private val exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR,
+    private val solve: (I) -> Unit
 ) {
     private val exceptions: MutableList<ExecException<I>> = ArrayList()
 
