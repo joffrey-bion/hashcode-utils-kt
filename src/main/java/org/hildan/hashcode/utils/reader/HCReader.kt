@@ -7,7 +7,7 @@ import java.io.LineNumberReader
 import java.io.Reader
 import java.io.StringReader
 
-val DEFAULT_DELIMITER = Regex("\\s")
+private val DEFAULT_DELIMITER = Regex("\\s")
 
 /**
  * Reads an instance of [P] from the given [input] text. This function provides an [HCReader] using the given
@@ -44,7 +44,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
     private var nextTokenIndex: Int = 0
 
     val lineNumber: Int
-      get() = reader.lineNumber
+        get() = reader.lineNumber
 
     /**
      * Skips the next [n] tokens of input.
@@ -66,7 +66,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
      * @throws InputParsingException if an error occurs while reading the input
      */
     fun nextString(): String {
-        while (!hasMoreTokenInCurrentLine()) {
+        while (!hasMoreTokensInCurrentLine()) {
             fetchNextLine()
         }
         return currentLineTokens!![nextTokenIndex++]
@@ -103,7 +103,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
         fetchNextLine()
         // mark current line as consumed
         nextTokenIndex = currentLineTokens!!.size
-        return currentLineString
+        return currentLineString!!
     }
 
     /**
@@ -147,31 +147,27 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
      */
     fun nextLineAsIntList(): List<Int> = nextLineAsStringArray().map { it.toInt() }
 
-    private fun hasMoreTokenInCurrentLine(): Boolean = currentLineTokens != null && nextTokenIndex < currentLineTokens!!.size
+    private fun hasMoreTokensInCurrentLine(): Boolean =
+        currentLineTokens != null && nextTokenIndex < currentLineTokens!!.size
 
     private fun fetchNextLine() {
         try {
-            if (hasMoreTokenInCurrentLine()) {
-                throw IncompleteLineReadException(
-                    lineNumber,
-                    remainingInputOnCurrentLine()
-                )
+            if (hasMoreTokensInCurrentLine()) {
+                throw IncompleteLineReadException(lineNumber, remainingInputOnCurrentLine())
             }
             val nextLine = reader.readLine() ?: throw NoMoreLinesToReadException()
             currentLineTokens = if (nextLine.isEmpty()) emptyArray() else nextLine.split(tokenDelimiter).toTypedArray()
             currentLineString = nextLine
             nextTokenIndex = 0
         } catch (e: IOException) {
-            throw InputParsingException(
-                "An error occurred while reading the input line $lineNumber",
-                e
-            )
+            throw InputParsingException("An error occurred while reading the input line $lineNumber", e)
         }
     }
 
-    private fun remainingInputOnCurrentLine(): String = remainingTokens().joinToString(" ")
+    private fun remainingInputOnCurrentLine(): String = remainingTokensOnCurrentLine().joinToString(" ")
 
-    private fun remainingTokens(): List<String> = currentLineTokens!!.slice(nextTokenIndex until currentLineTokens!!.size)
+    private fun remainingTokensOnCurrentLine(): List<String> =
+        currentLineTokens!!.slice(nextTokenIndex until currentLineTokens!!.size)
 
     /**
      * Releases potential resources used by the reader. Should be called when parsing is over.
@@ -186,16 +182,9 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
                 throw IncompleteInputReadException(nbLinesLeft)
             }
         } catch (e: IOException) {
-            throw InputParsingException(
-                "An error occurred while consuming the end of the input",
-                e
-            )
+            throw InputParsingException("An error occurred while consuming the end of the input", e)
         }
     }
 
-    private fun parseError(msg: String): Nothing = throw InputParsingException(
-        lineNumber,
-        nextTokenIndex,
-        msg
-    )
+    private fun parseError(msg: String): Nothing = throw InputParsingException(lineNumber, nextTokenIndex, msg)
 }
