@@ -10,10 +10,11 @@ const val LATITUDE = 0
  */
 const val LONGITUDE = 1
 
-class Simulation(val nTurns: Int) {
-    var collections: Array<ImageCollection> = emptyArray()
-    var satellites: Array<Satellite> = emptyArray()
-}
+class Simulation(
+    val nTurns: Int,
+    val satellites: Array<Satellite>,
+    val collections: Array<ImageCollection>
+)
 
 class ImageCollection(val value: Int) {
     var locations: Array<Location> = emptyArray()
@@ -26,17 +27,19 @@ class Picture(
     val satellite: Int
 )
 
-class Location(var parentCollection: ImageCollection, latitude: Int, longitude: Int) {
-
-    var coords = IntArray(2)
+class Location(
+    var parentCollection: ImageCollection,
+    latitude: Int,
+    longitude: Int
+) {
+    var coords = IntArray(2).apply {
+        this[LATITUDE] = latitude
+        this[LONGITUDE] = longitude
+    }
 
     var pictureTaken = false
-
-    init {
-        this.coords[LATITUDE] = latitude
-        this.coords[LONGITUDE] = longitude
-    }
 }
+
 class Satellite(
     latitude: Int,
     longitude: Int,
@@ -44,12 +47,8 @@ class Satellite(
     val maxOrientationChangePerTurn: Int,
     val maxOrientationValue: Int
 ) {
-
-    var position: IntArray
-
-    init {
-        this.position = IntArray(2)
-        this.position[LATITUDE] = latitude
-        this.position[LONGITUDE] = longitude
+    var position: IntArray = IntArray(2).apply {
+        this[LATITUDE] = latitude
+        this[LONGITUDE] = longitude
     }
 }

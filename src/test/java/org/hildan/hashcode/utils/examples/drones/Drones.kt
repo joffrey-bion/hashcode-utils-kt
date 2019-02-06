@@ -34,34 +34,30 @@ class DronesTestKt {
         val nTurns = nextInt()
         val maxLoad = nextInt()
         val P = nextInt()
-
-        val simulation = Simulation(nRows, nCols, D, nTurns, maxLoad, P)
-
-        simulation.productTypeWeights = nextLineAsIntArray()
+        val productTypeWeights = nextLineAsIntArray()
 
         val W = nextInt()
-        simulation.warehouses = Array(W) { readWarehouse() }
+        val warehouses = Array(W) { readWarehouse() }
 
         val C = nextInt()
-        simulation.orders = Array(C) { readOrder(P) }
-        return simulation
+        val orders = Array(C) { readOrder(it, P) }
+
+        return Simulation(nRows, nCols, D, nTurns, maxLoad, P, productTypeWeights, warehouses, orders)
     }
 
     private fun HCReader.readWarehouse(): Warehouse {
         val row = nextInt()
         val col = nextInt()
-        val warehouse = Warehouse(row, col)
-        warehouse.stocks = nextLineAsIntArray()
-        return warehouse
+        val stocks = nextLineAsIntArray()
+        return Warehouse(row, col, stocks)
     }
 
-    private fun HCReader.readOrder(P: Int): Order {
+    private fun HCReader.readOrder(id: Int, nProductTypes: Int): Order {
         val x = nextInt()
         val y = nextInt()
-        val order = Order(x, y, P)
         skip(1)
-        order.setItems(nextLineAsIntArray())
-        return order
+        val products = nextLineAsIntArray()
+        return Order(id, x, y, nProductTypes, products)
     }
 
     @Test

@@ -1,36 +1,30 @@
 package org.hildan.hashcode.utils.examples.streaming
 
 import java.util.ArrayList
-import java.util.Arrays
-import java.util.HashMap
 
-class StreamingProblem {
-    var nVideos: Int = 0
-    var nEndpoints: Int = 0
-    var nRequestDescriptions: Int = 0
-    var nCaches: Int = 0
-    var cacheSize: Int = 0
-    var videoSizes: IntArray = IntArray(0)
-    var endpoints: Array<Endpoint> = emptyArray()
-    var requestDescs: Array<RequestDesc> = emptyArray()
-
+class StreamingProblem(
+    var nVideos: Int,
+    var nEndpoints: Int,
+    var nRequestDescriptions: Int,
+    var nCaches: Int,
+    var cacheSize: Int,
+    var videoSizes: IntArray,
+    var endpoints: Array<Endpoint>,
+    var requestDescs: Array<RequestDesc>
+) {
     fun solve(): List<String> {
         return ArrayList()
     }
 }
 
-class Endpoint {
-    var dcLatency: Int = 0
-    var cacheIds: IntArray = IntArray(0)
-    var cacheLatencies: MutableMap<Int, Int> = HashMap()
-    var gainPerCache: MutableMap<Int, Int> = HashMap()
-    var nRequestsPerVideo: MutableMap<Video, Long> = HashMap()
-
-    fun setLatencies(latencies: Array<Latency>) {
-        cacheIds = Arrays.stream(latencies).mapToInt { l -> l.cacheId }.toArray()
-        Arrays.stream(latencies).forEach { l -> cacheLatencies[l.cacheId] = l.latency }
-        Arrays.stream(latencies).forEach { l -> gainPerCache[l.cacheId] = dcLatency - l.latency }
-    }
+class Endpoint(
+    val dcLatency: Int,
+    latencies: Array<Latency>
+) {
+    val cacheIds: IntArray = latencies.map { l -> l.cacheId }.toIntArray()
+    val cacheLatencies: MutableMap<Int, Int> = latencies.map { it.cacheId to it.latency }.toMap(HashMap())
+    val gainPerCache: MutableMap<Int, Int> = latencies.map { it.cacheId to dcLatency - it.latency }.toMap(HashMap())
+    val nRequestsPerVideo: MutableMap<Video, Long> = HashMap()
 
     fun addRequests(video: Video, nbRequests: Int) {
         nRequestsPerVideo.putIfAbsent(video, 0L)
@@ -40,15 +34,8 @@ class Endpoint {
     fun getNbRequests(video: Video): Long = nRequestsPerVideo.getOrDefault(video, 0L)
 }
 
-class Latency {
-    var cacheId: Int = 0
-    var latency: Int = 0
-}
+class Latency(val cacheId: Int, val latency: Int)
 
-class RequestDesc {
-    var count: Int = 0
-    var videoId: Int = 0
-    var endpointId: Int = 0
-}
+class RequestDesc(var count: Int, var videoId: Int, var endpointId: Int)
 
 class Video

@@ -14,10 +14,8 @@ fun main(args: Array<String>) = runBlocking {
 private fun HCReader.readProblem(): Problem {
     val P = nextInt()
     val C = nextInt()
-    val problem = Problem(C)
     val points = List(P) { readPoint() }
-    problem.points = points
-    return problem
+    return Problem(C, points)
 }
 
 private fun HCReader.readPoint(): Point {
@@ -26,12 +24,12 @@ private fun HCReader.readPoint(): Point {
     return Point(x, y)
 }
 
-internal class Point(val x: Double, val y: Double)
+private data class Point(val x: Double, val y: Double)
 
-internal class Problem(val nClusters: Int) {
-
-    var points: List<Point>? = null
-
+private data class Problem(
+    val nClusters: Int,
+    val points: List<Point>
+) {
     fun solve(): List<String> {
 
         // solve the problem here

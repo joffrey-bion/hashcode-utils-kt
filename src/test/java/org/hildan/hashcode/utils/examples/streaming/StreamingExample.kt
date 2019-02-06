@@ -5,6 +5,7 @@ import org.hildan.hashcode.utils.reader.readHashCodeInput
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import kotlin.random.Random.Default.nextInt
 
 class StreamingExample {
 
@@ -21,39 +22,44 @@ class StreamingExample {
             + "1 0 1000")  // 1000 requests for video 1 coming from endpoint 0.
 
     private fun HCReader.readStreamingProblem(): StreamingProblem {
-        val problem = StreamingProblem().apply {
-            nVideos = nextInt()
-            nEndpoints = nextInt()
-            nRequestDescriptions = nextInt()
-            nCaches = nextInt()
-            cacheSize = nextInt()
-            videoSizes = nextLineAsIntArray()
-        }
-        problem.endpoints = Array(problem.nEndpoints) { readEndpoint() }
-        problem.requestDescs = Array(problem.nRequestDescriptions) { readRequest() }
-        return problem
+        val nVideos = nextInt()
+        val nEndpoints = nextInt()
+        val nRequestDescriptions = nextInt()
+        val nCaches = nextInt()
+        val cacheSize = nextInt()
+        val videoSizes = nextLineAsIntArray()
+        val endpoints = Array(nEndpoints) { readEndpoint() }
+        val requestDescs = Array(nRequestDescriptions) { readRequest() }
+        return StreamingProblem(
+            nVideos,
+            nEndpoints,
+            nRequestDescriptions,
+            nCaches,
+            cacheSize,
+            videoSizes,
+            endpoints,
+            requestDescs
+        )
     }
 
     private fun HCReader.readEndpoint(): Endpoint {
-        val endpoint = Endpoint().apply {
-            dcLatency = nextInt()
-        }
+        val dcLatency = nextInt()
         val K = nextInt()
         val latencies = Array(K) { readLatency() }
-        endpoint.setLatencies(latencies)
-        return endpoint
+
+        return Endpoint(dcLatency, latencies)
     }
 
-    private fun HCReader.readLatency(): Latency = Latency().apply {
-        cacheId = nextInt()
+    private fun HCReader.readLatency(): Latency = Latency(
+        cacheId = nextInt(),
         latency = nextInt()
-    }
+    )
 
-    private fun HCReader.readRequest(): RequestDesc = RequestDesc().apply {
-        videoId = nextInt()
-        endpointId = nextInt()
+    private fun HCReader.readRequest(): RequestDesc = RequestDesc(
+        videoId = nextInt(),
+        endpointId = nextInt(),
         count = nextInt()
-    }
+    )
 
     @Test
     fun test_parser() {

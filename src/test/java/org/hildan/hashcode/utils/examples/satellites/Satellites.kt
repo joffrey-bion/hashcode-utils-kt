@@ -27,12 +27,11 @@ class Satellites {
 
     private fun HCReader.readSimulation(): Simulation {
         val nTurns = nextInt()
-        val simulation = Simulation(nTurns)
         val S = nextInt()
-        simulation.satellites = Array(S) { readSatellite() }
+        val satellites = Array(S) { readSatellite() }
         val C =  nextInt()
-        simulation.collections = Array(C) { readImageCollection() }
-        return simulation
+        val collections = Array(C) { readImageCollection() }
+        return Simulation(nTurns, satellites, collections)
     }
 
     private fun HCReader.readSatellite(): Satellite {
