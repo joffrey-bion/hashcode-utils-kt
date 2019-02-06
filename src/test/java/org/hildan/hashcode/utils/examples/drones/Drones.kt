@@ -1,7 +1,7 @@
 package org.hildan.hashcode.utils.examples.drones
 
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.reader.readHashCodeInput
+import org.hildan.hashcode.utils.reader.readHCInputText
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -62,7 +62,7 @@ class DronesTestKt {
 
     @Test
     fun test() {
-        val problem = readHashCodeInput(input) { readSimulation() }
+        val problem = readHCInputText(input) { readSimulation() }
 
         assertEquals(100, problem.nRows.toLong())
         assertEquals(100, problem.nCols.toLong())

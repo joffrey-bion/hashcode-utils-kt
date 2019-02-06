@@ -13,7 +13,7 @@ private val DEFAULT_DELIMITER = Regex("\\s")
  * Reads an instance of [P] from the given [input] text. This function provides an [HCReader] using the given
  * [tokenDelimiter] regex as delimiter.
  */
-fun <P> readHashCodeInput(
+fun <P> readHCInputText(
     input: String,
     tokenDelimiter: Regex = DEFAULT_DELIMITER,
     readProblem: HCReader.() -> P
@@ -23,11 +23,15 @@ fun <P> readHashCodeInput(
  * Reads an instance of [P] from the file with the given [filename]. This function provides an [HCReader] using the
  * given [tokenDelimiter] regex as delimiter.
  */
-fun <P> readHashCodeInputFile(
+fun <P> readHCInputFile(
     filename: String,
     tokenDelimiter: Regex = DEFAULT_DELIMITER,
     readProblem: HCReader.() -> P
-): P = HCReader(FileReader(filename), tokenDelimiter).use { it.readProblem() }
+): P = try {
+    HCReader(FileReader(filename), tokenDelimiter).use { it.readProblem() }
+} catch (e: Exception) {
+    throw FileParsingException(filename, e)
+}
 
 /**
  * Provides convenience methods to parse the input data, with clear error handling and line numbering.

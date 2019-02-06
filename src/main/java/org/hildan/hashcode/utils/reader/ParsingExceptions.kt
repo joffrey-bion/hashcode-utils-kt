@@ -25,3 +25,9 @@ class IncompleteLineReadException(lineNum: Int, unreadEndOfLine: String) :
  * Thrown if the input is accessed for more lines when there is no more to read.
  */
 class NoMoreLinesToReadException : InputParsingException("End of input reached, cannot read more lines")
+
+/**
+ * Thrown if an exception occurs while parsing a file, in order to provide the filename in the message.
+ */
+class FileParsingException(filename: String, cause: Exception):
+    RuntimeException("Exception occurred while solving the input file '$filename'", cause)

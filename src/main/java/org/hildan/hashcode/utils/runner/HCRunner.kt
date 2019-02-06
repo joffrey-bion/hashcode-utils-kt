@@ -4,16 +4,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.writer.solveHashCodeProblem
+import org.hildan.hashcode.utils.writer.solveHCProblemAndWriteFile
 import java.util.ArrayList
 
-suspend fun solveInParallel(
+suspend fun solveHCFilesInParallel(
     vararg filenames: String,
     exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR,
     readAndSolve: HCReader.() -> Iterable<CharSequence>
 ) {
     runInParallel(*filenames, exceptionsLogger = exceptionsLogger) {
-        solveHashCodeProblem(it, readAndSolve = readAndSolve)
+        solveHCProblemAndWriteFile(it, readAndSolve = readAndSolve)
     }
 }
 

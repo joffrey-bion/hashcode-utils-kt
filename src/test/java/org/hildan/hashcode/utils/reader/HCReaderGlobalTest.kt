@@ -55,7 +55,7 @@ class HCReaderGlobalTest {
 
     @Test
     fun test() {
-        val problem = readHashCodeInput(CONTENT) { readProblem() }
+        val problem = readHCInputText(CONTENT) { readProblem() }
 
         assertEquals(42, problem.param1.toLong())
         assertEquals(24, problem.param2.toLong())

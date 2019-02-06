@@ -1,11 +1,10 @@
 package org.hildan.hashcode.utils.examples.streaming
 
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.reader.readHashCodeInput
+import org.hildan.hashcode.utils.reader.readHCInputText
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import kotlin.random.Random.Default.nextInt
 
 class StreamingExample {
 
@@ -63,7 +62,7 @@ class StreamingExample {
 
     @Test
     fun test_parser() {
-        val problem = readHashCodeInput(input) { readStreamingProblem() }
+        val problem = readHCInputText(input) { readStreamingProblem() }
 
         assertEquals(5, problem.nVideos.toLong())
         assertEquals(2, problem.nEndpoints.toLong())
