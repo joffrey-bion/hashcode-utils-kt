@@ -21,12 +21,12 @@ class StreamingExample {
             + "1 0 1000")  // 1000 requests for video 1 coming from endpoint 0.
 
     private fun HCReader.readStreamingProblem(): StreamingProblem {
-        val nVideos = nextInt()
-        val nEndpoints = nextInt()
-        val nRequestDescriptions = nextInt()
-        val nCaches = nextInt()
-        val cacheSize = nextInt()
-        val videoSizes = nextLineAsIntArray()
+        val nVideos = readInt()
+        val nEndpoints = readInt()
+        val nRequestDescriptions = readInt()
+        val nCaches = readInt()
+        val cacheSize = readInt()
+        val videoSizes = IntArray(nVideos) { readInt() }
         val endpoints = Array(nEndpoints) { readEndpoint() }
         val requestDescs = Array(nRequestDescriptions) { readRequest() }
         return StreamingProblem(
@@ -42,22 +42,22 @@ class StreamingExample {
     }
 
     private fun HCReader.readEndpoint(): Endpoint {
-        val dcLatency = nextInt()
-        val K = nextInt()
+        val dcLatency = readInt()
+        val K = readInt()
         val latencies = Array(K) { readLatency() }
 
         return Endpoint(dcLatency, latencies)
     }
 
     private fun HCReader.readLatency(): Latency = Latency(
-        cacheId = nextInt(),
-        latency = nextInt()
+        cacheId = readInt(),
+        latency = readInt()
     )
 
     private fun HCReader.readRequest(): RequestDesc = RequestDesc(
-        videoId = nextInt(),
-        endpointId = nextInt(),
-        count = nextInt()
+        videoId = readInt(),
+        endpointId = readInt(),
+        count = readInt()
     )
 
     @Test

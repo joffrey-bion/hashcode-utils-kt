@@ -26,20 +26,20 @@ class Satellites {
             + "3300 3599\n")  // The images need to be taken in the last 5 minutes.
 
     private fun HCReader.readSimulation(): Simulation {
-        val nTurns = nextInt()
-        val S = nextInt()
+        val nTurns = readInt()
+        val S = readInt()
         val satellites = Array(S) { readSatellite() }
-        val C =  nextInt()
+        val C =  readInt()
         val collections = Array(C) { readImageCollection() }
         return Simulation(nTurns, satellites, collections)
     }
 
     private fun HCReader.readSatellite(): Satellite {
-        val latitude = nextInt()
-        val longitude = nextInt()
-        val v0 = nextInt()
-        val maxOrientationChange = nextInt()
-        val maxOrientationValue = nextInt()
+        val latitude = readInt()
+        val longitude = readInt()
+        val v0 = readInt()
+        val maxOrientationChange = readInt()
+        val maxOrientationValue = readInt()
         return Satellite(
             latitude,
             longitude,
@@ -50,24 +50,24 @@ class Satellites {
     }
 
     private fun HCReader.readImageCollection(): ImageCollection {
-        val value = nextInt()
+        val value = readInt()
         val imageCollection = ImageCollection(value)
-        val L = nextInt()
-        val R = nextInt()
+        val L = readInt()
+        val R = readInt()
         imageCollection.locations = Array(L) { readLocation(imageCollection) }
         imageCollection.ranges = Array(R) { readRange() }
         return imageCollection
     }
 
     private fun HCReader.readLocation(collection: ImageCollection): Location {
-        val latitude = nextInt()
-        val longitude = nextInt()
+        val latitude = readInt()
+        val longitude = readInt()
         return Location(collection, latitude, longitude)
     }
 
     private fun HCReader.readRange(): IntArray {
-        val latitude = nextInt()
-        val longitude = nextInt()
+        val latitude = readInt()
+        val longitude = readInt()
         return intArrayOf(latitude, longitude)
     }
 

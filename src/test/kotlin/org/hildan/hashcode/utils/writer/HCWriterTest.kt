@@ -19,14 +19,14 @@ class HCWriterTest {
 
     private class Problem(
         var num: Int,
-        var items: Array<String>
+        var items: List<String>
     ) {
         fun solve() = items.map { s -> s + num }
     }
 
     private fun HCReader.readProblem(): Problem {
-        val num = nextInt()
-        val items = nextLineAsStringArray()
+        val num = readInt()
+        val items = List(3) { readString() }
         return Problem(num, items)
     }
 

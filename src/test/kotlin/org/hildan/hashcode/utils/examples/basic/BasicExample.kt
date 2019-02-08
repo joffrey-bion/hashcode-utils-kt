@@ -12,15 +12,15 @@ fun main(args: Array<String>) = runBlocking {
 }
 
 private fun HCReader.readProblem(): Problem {
-    val P = nextInt()
-    val C = nextInt()
+    val P = readInt()
+    val C = readInt()
     val points = List(P) { readPoint() }
     return Problem(C, points)
 }
 
 private fun HCReader.readPoint(): Point {
-    val x = nextDouble()
-    val y = nextDouble()
+    val x = readDouble()
+    val y = readDouble()
     return Point(x, y)
 }
 

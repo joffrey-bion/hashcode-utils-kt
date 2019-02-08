@@ -43,8 +43,8 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
 
     private val reader: LineNumberReader = LineNumberReader(reader).apply { lineNumber = 0 }
 
-    private var currentLineString: String? = null
-    private var currentLineTokens: Array<String>? = null
+    private var currentLineText: String = ""
+    private var currentLineTokens: List<String> = emptyList()
     private var nextTokenIndex: Int = 0
 
     val lineNumber: Int
@@ -60,7 +60,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
         if (n < 0) {
             throw IllegalArgumentException("The number of elements to skip cannot be negative")
         }
-        repeat(n) { nextString() }
+        repeat(n) { nextToken() }
     }
 
     /**
@@ -69,12 +69,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
      * @throws NoMoreLinesToReadException if the last token of the line was consumed and there is no more lines to read
      * @throws InputParsingException if an error occurs while reading the input
      */
-    fun nextString(): String {
-        while (!hasMoreTokensInCurrentLine()) {
-            fetchNextLine()
-        }
-        return currentLineTokens!![nextTokenIndex++]
-    }
+    fun readString(): String = nextToken()
 
     /**
      * Reads the next token of the input as an int.
@@ -82,7 +77,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
      * @throws NoMoreLinesToReadException if the last token of the line was consumed and there is no more lines to read
      * @throws InputParsingException if the input could not be parsed as an int
      */
-    fun nextInt(): Int = nextString().let {
+    fun readInt(): Int = nextToken().let {
         it.toIntOrNull() ?: parseError("expected integer, got '$it'")
     }
 
@@ -90,69 +85,55 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
      * Reads the next token of the input as a double.
      *
      * @throws NoMoreLinesToReadException if the last token of the line was consumed and there is no more lines to read
-     * @throws InputParsingException if the input could not be parsed as an double
+     * @throws InputParsingException if the input could not be parsed as a double
      */
-    fun nextDouble(): Double = nextString().let {
+    fun readDouble(): Double = readString().let {
         it.toDoubleOrNull() ?: parseError("expected double, got '$it'")
     }
 
     /**
-     * Reads and returns the next line of input.
+     * Reads the next token of the input as a boolean.
      *
-     * @throws IncompleteLineReadException if the previous line was not completely consumed
+     * @throws NoMoreLinesToReadException if the last token of the line was consumed and there is no more lines to read
+     */
+    fun readBoolean(): Boolean = nextToken().toBoolean()
+
+    /**
+     * Reads and returns the whole next line of input.
+     *
+     * @throws IncompleteLineReadException if the current line was not completely consumed
      * @throws NoMoreLinesToReadException if there is no more lines to read
      * @throws InputParsingException if an error occurs while reading the input
      */
-    fun nextLine(): String? {
+    fun nextLineText(): String {
         fetchNextLine()
         // mark current line as consumed
-        nextTokenIndex = currentLineTokens!!.size
-        return currentLineString!!
+        nextTokenIndex = currentLineTokens.size
+        return currentLineText
     }
-
-    /**
-     * Reads and returns the next line of input as an array of string tokens.
-     *
-     * @throws IncompleteLineReadException if the previous line was not completely consumed
-     * @throws NoMoreLinesToReadException if there is no more lines to read
-     * @throws InputParsingException if an error occurs while reading the input
-     */
-    fun nextLineAsStringArray(): Array<String> {
-        fetchNextLine()
-        // mark current line as consumed
-        nextTokenIndex = currentLineTokens!!.size
-        return currentLineTokens!!
-    }
-
-    /**
-     * Reads and returns the next line of input as an array of ints.
-     *
-     * @throws IncompleteLineReadException if the previous line was not completely consumed
-     * @throws NoMoreLinesToReadException if there is no more lines to read
-     * @throws InputParsingException if an error occurs while reading the input or converting to int
-     */
-    fun nextLineAsIntArray(): IntArray = nextLineAsIntList().toIntArray()
 
     /**
      * Reads and returns the next line of input as a list of strings.
      *
-     * @throws IncompleteLineReadException if the previous line was not completely consumed
+     * @throws IncompleteLineReadException if the current line was not completely consumed
      * @throws NoMoreLinesToReadException if there is no more lines to read
-     * @throws InputParsingException if an error occurs while reading the input or converting to int
+     * @throws InputParsingException if an error occurs while reading the input
      */
-    fun nextLineAsStringList(): List<String> = nextLineAsStringArray().toList()
+    fun nextLineTokens(): List<String> {
+        fetchNextLine()
+        // mark current line as consumed
+        nextTokenIndex = currentLineTokens.size
+        return currentLineTokens
+    }
 
-    /**
-     * Reads and returns the next line of input as a list of strings.
-     *
-     * @throws IncompleteLineReadException if the previous line was not completely consumed
-     * @throws NoMoreLinesToReadException if there is no more lines to read
-     * @throws InputParsingException if an error occurs while reading the input or converting to int
-     */
-    fun nextLineAsIntList(): List<Int> = nextLineAsStringArray().map { it.toInt() }
+    private fun nextToken(): String {
+        while (!hasMoreTokensInCurrentLine()) {
+            fetchNextLine()
+        }
+        return currentLineTokens[nextTokenIndex++]
+    }
 
-    private fun hasMoreTokensInCurrentLine(): Boolean =
-        currentLineTokens != null && nextTokenIndex < currentLineTokens!!.size
+    private fun hasMoreTokensInCurrentLine(): Boolean = nextTokenIndex < currentLineTokens.size
 
     private fun fetchNextLine() {
         try {
@@ -160,8 +141,8 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
                 throw IncompleteLineReadException(lineNumber, remainingInputOnCurrentLine())
             }
             val nextLine = reader.readLine() ?: throw NoMoreLinesToReadException()
-            currentLineTokens = if (nextLine.isEmpty()) emptyArray() else nextLine.split(tokenDelimiter).toTypedArray()
-            currentLineString = nextLine
+            currentLineTokens = if (nextLine.isEmpty()) emptyList() else nextLine.split(tokenDelimiter)
+            currentLineText = nextLine
             nextTokenIndex = 0
         } catch (e: IOException) {
             throw InputParsingException("An error occurred while reading the input line $lineNumber", e)
@@ -171,7 +152,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
     private fun remainingInputOnCurrentLine(): String = remainingTokensOnCurrentLine().joinToString(" ")
 
     private fun remainingTokensOnCurrentLine(): List<String> =
-        currentLineTokens!!.slice(nextTokenIndex until currentLineTokens!!.size)
+        currentLineTokens.slice(nextTokenIndex until currentLineTokens.size)
 
     /**
      * Releases potential resources used by the reader. Should be called when parsing is over.

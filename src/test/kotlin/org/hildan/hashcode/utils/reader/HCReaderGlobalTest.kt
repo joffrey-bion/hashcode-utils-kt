@@ -36,21 +36,21 @@ class HCReaderGlobalTest {
     }
 
     private fun HCReader.readProblem(): Problem = Problem().apply {
-        param1 = nextInt()
-        param2 = nextInt()
-        nShapes = nextInt()
+        param1 = readInt()
+        param2 = readInt()
+        nShapes = readInt()
         shapes = Array(nShapes) { readShape() }
     }
 
     private fun HCReader.readShape(): Shape = Shape().apply {
-        name = nextString()
-        nPoints = nextInt()
+        name = readString()
+        nPoints = readInt()
         points = List(nPoints) { readPoint() }
     }
 
     private fun HCReader.readPoint(): Point = Point().apply {
-        x = nextDouble()
-        y = nextDouble()
+        x = readDouble()
+        y = readDouble()
     }
 
     @Test
