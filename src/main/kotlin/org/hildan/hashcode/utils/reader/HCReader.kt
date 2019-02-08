@@ -7,11 +7,11 @@ import java.io.LineNumberReader
 import java.io.Reader
 import java.io.StringReader
 
-private val DEFAULT_DELIMITER = Regex("\\s")
+private val DEFAULT_DELIMITER = Regex("""\s+""")
 
 /**
  * Reads an instance of [P] from the given [input] text. This function provides an [HCReader] using the given
- * [tokenDelimiter] regex as delimiter.
+ * [tokenDelimiter] regex as delimiter (defaults to whitespace).
  */
 fun <P> readHCInputText(
     input: String,
@@ -21,7 +21,7 @@ fun <P> readHCInputText(
 
 /**
  * Reads an instance of [P] from the file with the given [filename]. This function provides an [HCReader] using the
- * given [tokenDelimiter] regex as delimiter.
+ * given [tokenDelimiter] regex as delimiter (defaults to whitespace).
  */
 fun <P> readHCInputFile(
     filename: String,

@@ -1,2 +1,176 @@
-# hashcode-utils-kt
-Utilities for programs solving Google Hash Code problems
+# Google HashCode utils for Kotlin
+[![Build Status](https://travis-ci.org/joffrey-bion/hashcode-utils-kt.svg?branch=master)](https://travis-ci.org/joffrey-bion/hashcode-utils-kt)
+
+This library provides useful tools to make your life easier when competing in the Google Hash Code:
+- A reader to easily map the input file to your classes representing the problem
+- A writer to deal with the output file I/O and let you focus on the problem
+- A runner that takes care of solving each input file in a separate coroutine with proper exception logging
+
+The goal here is to take care of the boilerplate code to avoid debugging your input parser while you should be focusing
+on solving the problem at hand.
+
+## Example usage on past editions
+
+You can find examples of usage of this library on previous HashCode editions problems in the
+[examples folder](src/test/kotlin/org/hildan/hashcode/utils/examples).
+
+For the purpose of this readme, we'll just give a quick glance at what this library provides, through a very simple
+example problem.
+
+## Simple example problem
+
+Imagine the problem is to group points into clusters from a cloud of points. The input file gives you the number of 
+points and the number of clusters to find, and then the list of point positions:
+
+```
+3 2      // 3 points, 2 clusters to find
+1.2 4.2  // point 0: x=1.2 y=4.2
+1.5 3.4  // point 1: x=1.5 y=3.4
+6.8 2.2  // point 2: x=6.8 y=2.2
+```
+
+Now, let's assume you represent the problem this way:
+
+```kotlin
+data class Point(val x: Double, val y: Double)
+
+data class Problem(
+    val nClusters: Int,
+    val points: List<Point>
+) {
+    fun solve(): List<String> {
+
+        // solve the problem here
+
+        // write solution into lines (this is problem-specific)
+        val lines = mutableListOf<String>()
+        lines.add("output line 0")
+        lines.add("output line 1")
+        return lines
+    }
+}
+```
+
+All of this is really what you want to be focusing on during the HashCode. We'll see how HashCode Utils can help you
+with the rest.
+
+### The input reader
+
+The functions `readHCInputText` and `readHCInputFile` allow you to read HashCode input and populate your model 
+classes with the problem's data, with nice error handling and line numbers, which saves a lot of time.
+
+For our little example problem, here's how you would write the parser:
+
+```kotlin
+import org.hildan.hashcode.utils.reader.readHCInputFile
+
+fun main(args: Array<String>) {
+    val filename = "problem.in"
+    val problem = readHCInputFile(filename) { // this: HCReader
+        readProblem()
+    }
+    
+    // solve the problem and write the output
+}
+
+private fun HCReader.readProblem(): Problem {
+    val nPoints = nextInt()
+    val nClusters = nextInt()
+    val points = List(nPoints) { readPoint() }
+    return Problem(nClusters, points)
+}
+
+private fun HCReader.readPoint(): Point {
+    val x = nextDouble()
+    val y = nextDouble()
+    return Point(x, y)
+}
+```
+
+As you can see, `readHCInputFile` provides you with an instance of `HCReader` that you can use to read tokens from the
+ input.
+ 
+To make the most of it, you should declare your own functions as extensions of `HCReader` so that it reads pretty 
+neatly. This way, you get access to all utility functions like `readInt`, `readString`, `readDouble`...
+
+You may read more about the API directly in [HCReader](src/main/java/org/hildan/hashcode/reader/HCReader.java)'s
+ Javadocs.
+
+### The output writer
+
+In addition to reading the input file, you also want to write the output lines to a file you can submit to the 
+HashCode Judge system. Outputting to the console and redirecting to a file is a solution, but it prevents you from 
+logging other stuff and monitoring what's going on in order to stop wasting time if things go out of hand.
+
+It's usually better to just output to a file instead. For this, use the function `solveHCProblemAndWriteFile`:
+
+```kotlin
+import org.hildan.hashcode.utils.writer.solveHCProblemAndWriteFile
+
+fun main(args: Array<String>) {
+    val filename = "problem.in"
+    val outputFilename = "problem.out"
+    solveHCProblemAndWriteFile(filename, outputFilename) { // this: HCReader
+        readProblem().solve()
+    }
+}
+
+private fun HCReader.readProblem(): Problem {
+    val nPoints = nextInt()
+    val nClusters = nextInt()
+    val points = List(nPoints) { readPoint() }
+    return Problem(nClusters, points)
+}
+
+private fun HCReader.readPoint(): Point {
+    val x = nextDouble()
+    val y = nextDouble()
+    return Point(x, y)
+}
+```
+
+This combines the reader and the writer in order to do everything in just a couple lines, and not waste time.
+
+The `readAndSolve` lambda can use the provided `HCReader` like in the previous example, and needs to return the lines
+ to write to the output file, as an `Iterable<String>`.
+
+The output filename is actually optional and will computed from the input by replacing `.in` by `.out` and placing 
+the output file in the `output/` directory.
+
+### The runner
+
+When you reach the end of the round, you might want to quickly run your program on all inputs at the same time using 
+multiple threads in order to benefit from whatever improvement you make on any problem.
+
+Let's assume you pass all input filenames as command line arguments. Then you can simply write:
+
+```kotlin
+import kotlinx.coroutines.runBlocking
+import org.hildan.hashcode.utils.reader.HCReader
+import org.hildan.hashcode.utils.runner.solveHCFilesInParallel
+
+fun main(args: Array<String>) = runBlocking {
+    solveHCFilesInParallel(*args) {
+        readProblem().solve()
+    }
+}
+
+private fun HCReader.readProblem(): Problem {
+    val P = readInt()
+    val C = readInt()
+    val points = List(P) { readPoint() }
+    return Problem(C, points)
+}
+
+private fun HCReader.readPoint(): Point {
+    val x = readDouble()
+    val y = readDouble()
+    return Point(x, y)
+}
+```
+
+This combines all 3 features to make the most of this library. Happy HashCode!
+
+## License
+
+Code released under the [MIT license](LICENSE).

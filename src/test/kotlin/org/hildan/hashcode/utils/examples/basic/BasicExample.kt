@@ -3,7 +3,6 @@ package org.hildan.hashcode.utils.examples.basic
 import kotlinx.coroutines.runBlocking
 import org.hildan.hashcode.utils.reader.HCReader
 import org.hildan.hashcode.utils.runner.solveHCFilesInParallel
-import java.util.ArrayList
 
 fun main(args: Array<String>) = runBlocking {
     solveHCFilesInParallel(*args) {
@@ -35,7 +34,7 @@ private data class Problem(
         // solve the problem here
 
         // write solution into lines (this is problem-specific)
-        val lines = ArrayList<String>()
+        val lines = mutableListOf<String>()
         lines.add("output line 0")
         lines.add("output line 1")
         return lines
