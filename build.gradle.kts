@@ -106,7 +106,7 @@ bintray {
     publish = true
 
     pkg(closureOf<PackageConfig> {
-        repo = getPropOrEnv("bintrayRepoLibs", "BINTRAY_REPO_LIBS")
+        repo = getPropOrEnv("bintrayRepo", "BINTRAY_REPO")
         name = project.name
         desc = project.description
         setLabels(*project.labels)

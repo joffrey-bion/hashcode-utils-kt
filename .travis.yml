@@ -3,6 +3,19 @@ language: java
 jdk:
   - oraclejdk8
 
+env:
+  global:
+    - GITHUB_USER=joffrey-bion
+    - BINTRAY_USER=joffrey-bion
+    - BINTRAY_REPO=maven
+    - secure: LJR8ejBN6C5rXxx0gEI89O5Wj9umlWCdwx8b5oTn+x/KFBt7QmZlvSpWrSx7VKDZAzvmPX1sXXxsoV7SFPqHQcnz1d/lnzPBQhReu0ZgItUwOtaXlfcrZ8iWKMqw51d/+YpOWsJ9dXkUCSp12hjL/75QAOEIU7ym8NVYYw7jwQmJf9tgh/i5MtBTbT8zDgZjDKcWdUP519ot23R74ReKobdWFGpi27KJiu6acOMlgT8wakUq8ld7dwHelSP99OGOxuPcYveHUiNiqfXAMtvImZtYtYW8PGoRFp8dEKuuwA2aNdljLbmo353PJSqLXRtgFeYySQ8bygDYp9OuPf+o1NRRWeXfw1lU3Y6ef2QiAqmIataWqxjb5LqtvlsEAInTid/w8yneOOG7abq3fp+UKDsiUsKvwJ7FZyjzQsgYm5T6OHyLx8Ssv52fMAn6IN8qDC8IHMR6EQB2JYVeEjSX7gYze8i2tyykR4u29riV3vBK2mje7epockQaPrfNOCDe5QQ9rQpDO8FCOBmYelK5bmU5AUQu4g9QCNJJIwsyp3n2d9brkhTVEm7+FQXDgeGOQ+2i41zeQR3kIqIh4SsD6r/07PpAarCGGPNdNhy1YQfPr23B/mpqyHygtOaWNBj9UVHY0Bk8bmV1bd9d7tS+86ABZomPs/F7+XeLa0NOPQc=
+
+deploy:
+  - provider: script
+    script: ./gradlew bintrayUpload
+    on:
+      tags: true
+
 # These files change at every build, and should not be cached
 # https://docs.travis-ci.com/user/languages/java/#Caching
 before_cache:
