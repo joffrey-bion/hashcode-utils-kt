@@ -1,21 +1,20 @@
 package org.hildan.hashcode.utils.reader
 
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+
+private val CONTENT = """
+    42 24 2
+    first 3
+    1.11 1.12
+    1.21 1.22
+    1.31 1.32
+    second 2
+    2.11 2.12
+    2.21 2.22
+    """.trimIndent()
 
 class HCReaderGlobalTest {
-
-    private val DELTA = 0.0001
-
-    private val CONTENT = ( //
-            "42 24 2\n" //
-            + "first 3\n" //
-            + "1.11 1.12\n" //
-            + "1.21 1.22\n" //
-            + "1.31 1.32\n" //
-            + "second 2\n" //
-            + "2.11 2.12\n" //
-            + "2.21 2.22\n")
 
     private class Problem {
         var param1: Int = 0
@@ -71,23 +70,23 @@ class HCReaderGlobalTest {
         assertEquals(2, shape1.nPoints.toLong())
 
         val point00 = shape0.points[0]
-        assertEquals(1.11, point00.x, DELTA)
-        assertEquals(1.12, point00.y, DELTA)
+        assertEquals(1.11, point00.x)
+        assertEquals(1.12, point00.y)
 
         val point01 = shape0.points[1]
-        assertEquals(1.21, point01.x, DELTA)
-        assertEquals(1.22, point01.y, DELTA)
+        assertEquals(1.21, point01.x)
+        assertEquals(1.22, point01.y)
 
         val point02 = shape0.points[2]
-        assertEquals(1.31, point02.x, DELTA)
-        assertEquals(1.32, point02.y, DELTA)
+        assertEquals(1.31, point02.x)
+        assertEquals(1.32, point02.y)
 
-        val point10 = shape1.points!![0]
-        assertEquals(2.11, point10.x, DELTA)
-        assertEquals(2.12, point10.y, DELTA)
+        val point10 = shape1.points[0]
+        assertEquals(2.11, point10.x)
+        assertEquals(2.12, point10.y)
 
         val point11 = shape1.points[1]
-        assertEquals(2.21, point11.x, DELTA)
-        assertEquals(2.22, point11.y, DELTA)
+        assertEquals(2.21, point11.x)
+        assertEquals(2.22, point11.y)
     }
 }

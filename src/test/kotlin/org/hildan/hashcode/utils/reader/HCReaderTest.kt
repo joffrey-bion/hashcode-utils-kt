@@ -1,28 +1,19 @@
 package org.hildan.hashcode.utils.reader
 
-import org.junit.Assert.assertArrayEquals
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.io.IOException
 import java.io.Reader
-import kotlin.test.assertFails
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 class HCReaderTest {
 
-    private lateinit var hcr: HCReader
-
     private fun hcReader(inputText: String) = HCReader(inputText.reader())
-
-    @Before
-    fun setUp() {
-        hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
-    }
 
     @Test
     fun lineNumber() {
-        hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
+        val hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
         assertEquals(0, hcr.lineNumber)
         hcr.nextLineText()
         assertEquals(1, hcr.lineNumber)
@@ -37,7 +28,7 @@ class HCReaderTest {
 
     @Test
     fun skip() {
-        hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
+        val hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
         assertEquals("this", hcr.readString())
         hcr.skip() // "is"
         assertEquals("a", hcr.readString())
@@ -47,15 +38,13 @@ class HCReaderTest {
         assertEquals(-44, hcr.readInt())
         assertEquals("", hcr.nextLineText())
         hcr.skip() // "something"
-        val e = assertFails { hcr.skip() }
-        assertTrue(e is NoMoreLinesToReadException)
+        assertFailsWith<NoMoreLinesToReadException> { hcr.skip() }
     }
 
     @Test
     fun `skip() fails on negative param`() {
         val hcr = hcReader("hello world")
-        val e = assertFails { hcr.skip(-1) }
-        assertTrue(e is IllegalArgumentException)
+        assertFailsWith<IllegalArgumentException> { hcr.skip(-1) }
     }
 
     @Test
@@ -66,7 +55,8 @@ class HCReaderTest {
     }
 
     @Test
-    fun nextLine() {
+    fun `nextLineText() standard case`() {
+        val hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
         assertEquals("this is a test", hcr.nextLineText())
         assertEquals("42 43 -44", hcr.nextLineText())
         assertEquals("", hcr.nextLineText())
@@ -74,25 +64,22 @@ class HCReaderTest {
     }
 
     @Test
-    fun `nextLine() should fail when no more lines to read`() {
+    fun `nextLineText() should fail when no more lines to read`() {
         val hcr = hcReader("this is the first line\nand the second")
         assertEquals("this is the first line", hcr.nextLineText())
         assertEquals("and the second", hcr.nextLineText())
-        val e = assertFails { hcr.nextLineText() }
-        assertEquals(NoMoreLinesToReadException::class, e::class)
+        assertFailsWith<NoMoreLinesToReadException> { hcr.nextLineText() }
     }
 
     @Test
-    fun `nextLine() should fail on IOException`() {
+    fun `nextLineText() should fail on IOException`() {
         val hcr = HCReader(FailingReader())
-        val e = assertFails { hcr.nextLineText() }
-        assertTrue(e is InputParsingException)
+        assertFailsWith<InputParsingException> { hcr.nextLineText() }
     }
 
     @Test
-    fun `nextString() and nextInt() standard case`() {
-        val input = "this is a test\n42 43 -44\n\nsomething\n"
-        val hcr = HCReader(input.reader())
+    fun `readString() and readInt() standard case`() {
+        val hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
         assertEquals("this", hcr.readString())
         assertEquals("is", hcr.readString())
         assertEquals("a", hcr.readString())
@@ -104,60 +91,66 @@ class HCReaderTest {
     }
 
     @Test
-    fun `nextInt() should fail on strings`() {
+    fun `readInt() should fail on non-numeric strings`() {
         val hcr = hcReader("hello world")
-        val e = assertFails { hcr.readInt() }
-        assertTrue(e is InputParsingException)
+        assertFailsWith<InputParsingException> { hcr.readInt() }
     }
 
     @Test
-    fun `nextDouble() standard case`() {
+    fun `readDouble() standard case`() {
         val hcr = hcReader("1.0 5.5 -1.321")
-        assertEquals(1.0, hcr.readDouble(), 0.000001)
-        assertEquals(5.5, hcr.readDouble(), 0.000001)
-        assertEquals(-1.321, hcr.readDouble(), 0.000001)
+        assertEquals(1.0, hcr.readDouble())
+        assertEquals(5.5, hcr.readDouble())
+        assertEquals(-1.321, hcr.readDouble())
     }
 
     @Test
-    fun `nextDouble() should work on ints`() {
+    fun `readDouble() should work on ints`() {
         val hcr = hcReader("2 34 -21")
-        assertEquals(2.0, hcr.readDouble(), 0.000001)
-        assertEquals(34.0, hcr.readDouble(), 0.000001)
-        assertEquals(-21.0, hcr.readDouble(), 0.000001)
+        assertEquals(2.0, hcr.readDouble())
+        assertEquals(34.0, hcr.readDouble())
+        assertEquals(-21.0, hcr.readDouble())
     }
 
     @Test
-    fun `nextDouble() should fail on strings`() {
+    fun `readDouble() should fail on non-numeric strings`() {
         val hcr = hcReader("hello world")
-        val e = assertFails { hcr.readDouble() }
-        assertTrue(e is InputParsingException)
+        assertFailsWith<InputParsingException> { hcr.readDouble() }
     }
 
     @Test
-    fun `nextLineAsIntArray() and nextLineAsStringList()`() {
+    fun `readBoolean() standard case`() {
+        val hcr = hcReader("true false\nTrue False\nTRUE FALSE")
+        assertEquals(true, hcr.readBoolean())
+        assertEquals(false, hcr.readBoolean())
+        assertEquals(true, hcr.readBoolean())
+        assertEquals(false, hcr.readBoolean())
+        assertEquals(true, hcr.readBoolean())
+        assertEquals(false, hcr.readBoolean())
+    }
+
+    @Test
+    fun `readBoolean() should fail on non-boolean strings`() {
+        val hcr = hcReader("true notABoolean")
+        assertEquals(true, hcr.readBoolean())
+        assertFailsWith<InputParsingException> { hcr.readBoolean() }
+    }
+
+    @Test
+    fun `nextLineTokens() standard cases`() {
         val hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
         assertEquals(listOf("this", "is", "a", "test"), hcr.nextLineTokens())
-        assertArrayEquals(intArrayOf(42, 43, -44), IntArray(3) { hcr.readInt() })
-        assertEquals(emptyList<String>(), hcr.nextLineTokens())
+        assertEquals(listOf("42", "43", "-44"), hcr.nextLineTokens())
+        assertEquals(emptyList(), hcr.nextLineTokens())
         assertEquals(listOf("something"), hcr.nextLineTokens())
     }
 
     @Test
-    fun `nextLineAsIntList() and nextLineAsStringList()`() {
-        val hcr = hcReader("this is a test\n42 43 -44\n\nsomething\n")
-        assertEquals(listOf("this", "is", "a", "test"), hcr.nextLineTokens())
-        assertEquals(listOf(42, 43, -44), List(3) { hcr.readInt() })
-        assertEquals(emptyList<String>(), hcr.nextLineTokens())
-        assertEquals(listOf("something"), hcr.nextLineTokens())
-    }
-
-    @Test
-    fun `nextLineAsStringArray() should fail on incomplete line read`() {
+    fun `nextLineTokens() should fail on incomplete line read`() {
         val hcr = hcReader("this is the first line\nand the second")
         assertEquals("this", hcr.readString())
         assertEquals("is", hcr.readString())
-        val e = assertFails { hcr.nextLineTokens() }
-        assertTrue(e is IncompleteLineReadException)
+        val e = assertFailsWith<IncompleteLineReadException> { hcr.nextLineTokens() }
         assertTrue(e.message!!.contains("the first line"))
     }
 
@@ -169,17 +162,20 @@ class HCReaderTest {
     }
 
     @Test
+    fun `close() nothing to read`() {
+        hcReader("").close()
+    }
+
+    @Test
     fun `close() should fail on unconsumed input`() {
         val hcr = hcReader("hello world")
-        val e = assertFails { hcr.close() }
-        assertTrue(e is IncompleteInputReadException)
+        assertFailsWith<IncompleteInputReadException> { hcr.close() }
     }
 
     @Test
     fun `close() should fail on IOException`() {
         val hcr = HCReader(FailingReader())
-        val e = assertFails { hcr.close() }
-        assertTrue(e is InputParsingException)
+        assertFailsWith<InputParsingException> { hcr.close() }
     }
 
     private class FailingReader : Reader() {

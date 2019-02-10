@@ -1,13 +1,13 @@
 package org.hildan.hashcode.utils.writer
 
 import org.hildan.hashcode.utils.reader.HCReader
-import org.junit.AfterClass
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
-import org.junit.BeforeClass
-import org.junit.Test
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import java.nio.file.Files
 import java.nio.file.Paths
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 private const val TEST_FILENAME = "testfile.in"
 
@@ -45,13 +45,13 @@ class HCWriterTest {
 
     companion object {
 
-        @BeforeClass
+        @BeforeAll
         @JvmStatic
         fun createTestInputFile() {
             Files.write(Paths.get(TEST_FILENAME), fileContent.lines())
         }
 
-        @AfterClass
+        @AfterAll
         @JvmStatic
         fun deleteTestInputFile() {
             Files.delete(Paths.get(TEST_FILENAME))

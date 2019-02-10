@@ -21,12 +21,6 @@ class ImageCollection(val value: Int) {
     var ranges: Array<IntArray> = emptyArray()
 }
 
-class Picture(
-    val position: IntArray,
-    val turnTakenAt: Int,
-    val satellite: Int
-)
-
 class Location(
     var parentCollection: ImageCollection,
     latitude: Int,
@@ -36,8 +30,6 @@ class Location(
         this[LATITUDE] = latitude
         this[LONGITUDE] = longitude
     }
-
-    var pictureTaken = false
 }
 
 class Satellite(

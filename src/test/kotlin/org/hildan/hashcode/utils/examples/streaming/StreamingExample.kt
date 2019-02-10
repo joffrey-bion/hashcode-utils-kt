@@ -2,9 +2,9 @@ package org.hildan.hashcode.utils.examples.streaming
 
 import org.hildan.hashcode.utils.reader.HCReader
 import org.hildan.hashcode.utils.reader.readHCInputText
-import org.junit.Assert.assertArrayEquals
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class StreamingExample {
 
@@ -75,9 +75,9 @@ class StreamingExample {
 
         assertEquals(1000, problem.endpoints[0].dcLatency.toLong())
         assertEquals(3, problem.endpoints[0].cacheLatencies.size.toLong())
-        assertEquals(Integer.valueOf(100), problem.endpoints[0].cacheLatencies.get(0))
-        assertEquals(Integer.valueOf(200), problem.endpoints[0].cacheLatencies.get(2))
-        assertEquals(Integer.valueOf(300), problem.endpoints[0].cacheLatencies.get(1))
+        assertEquals(100, problem.endpoints[0].cacheLatencies[0])
+        assertEquals(200, problem.endpoints[0].cacheLatencies[2])
+        assertEquals(300, problem.endpoints[0].cacheLatencies[1])
 
         assertEquals(500, problem.endpoints[1].dcLatency.toLong())
         assertEquals(0, problem.endpoints[1].cacheLatencies.size.toLong())
