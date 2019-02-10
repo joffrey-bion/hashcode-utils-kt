@@ -87,7 +87,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
      * @throws NoMoreLinesToReadException if the last token of the line was consumed and there is no more lines to read
      * @throws InputParsingException if the input could not be parsed as a double
      */
-    fun readDouble(): Double = readString().let {
+    fun readDouble(): Double = nextToken().let {
         it.toDoubleOrNull() ?: parseError("expected double, got '$it'")
     }
 
@@ -95,8 +95,15 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
      * Reads the next token of the input as a boolean.
      *
      * @throws NoMoreLinesToReadException if the last token of the line was consumed and there is no more lines to read
+     * @throws InputParsingException if the input could not be parsed as a boolean
      */
-    fun readBoolean(): Boolean = nextToken().toBoolean()
+    fun readBoolean(): Boolean = nextToken().let {
+        when {
+            it.equals("true", ignoreCase = true) -> true
+            it.equals("false", ignoreCase = true) -> false
+            else -> parseError("expected boolean, got '$it'")
+        }
+    }
 
     /**
      * Reads and returns the whole next line of input.
