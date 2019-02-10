@@ -47,6 +47,10 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIM
     private var currentLineTokens: List<String> = emptyList()
     private var nextTokenIndex: Int = 0
 
+    /**
+     * The current line number. The value is 0 while nothing has been read yet, because the reader's position is
+     * considered to be before line 1.
+     */
     val lineNumber: Int
         get() = reader.lineNumber
 

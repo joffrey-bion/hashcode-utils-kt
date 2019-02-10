@@ -7,6 +7,9 @@ import org.hildan.hashcode.utils.reader.HCReader
 import org.hildan.hashcode.utils.writer.solveHCProblemAndWriteFile
 import java.util.ArrayList
 
+/**
+ * Solves the problems defined by each of the given input files, each in its own coroutine.
+ */
 suspend fun solveHCFilesInParallel(
     vararg filenames: String,
     exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR,
@@ -17,6 +20,9 @@ suspend fun solveHCFilesInParallel(
     }
 }
 
+/**
+ * Runs the given function on each of the given input, each in its own coroutine.
+ */
 suspend fun <I> runInParallel(
     vararg inputs: I,
     exceptionsLogger: UncaughtExceptionsLogger = UncaughtExceptionsLogger.STDERR,

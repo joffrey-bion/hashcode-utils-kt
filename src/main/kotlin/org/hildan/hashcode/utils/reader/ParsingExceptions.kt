@@ -4,8 +4,18 @@ package org.hildan.hashcode.utils.reader
  * Thrown if the parsing of the input fails.
  */
 open class InputParsingException : RuntimeException {
+    /**
+     * Constructs a new InputParsingException with the given [message] and no cause.
+     */
     constructor(message: String) : super(message)
+    /**
+     * Constructs a new InputParsingException with the given [message] and [cause].
+     */
     constructor(message: String, cause: Throwable) : super(message, cause)
+    /**
+     * Constructs a new InputParsingException with the given [message], along with [lineNum] and [tokenNum] for easier
+     * debugging.
+     */
     constructor(lineNum: Int, tokenNum: Int, message: String) : super("Line $lineNum, token $tokenNum: \"$message\"")
 }
 
