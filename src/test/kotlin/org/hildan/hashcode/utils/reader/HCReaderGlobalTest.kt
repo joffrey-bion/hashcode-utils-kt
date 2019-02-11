@@ -1,7 +1,10 @@
 package org.hildan.hashcode.utils.reader
 
 import org.junit.jupiter.api.Test
+import java.nio.file.Files
+import java.nio.file.Paths
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 private val CONTENT = """
     42 24 2
@@ -53,9 +56,32 @@ class HCReaderGlobalTest {
     }
 
     @Test
-    fun test() {
+    fun readHCInputText() {
         val problem = readHCInputText(CONTENT) { readProblem() }
+        verifyProblemData(problem)
+    }
 
+    @Test
+    fun readHCInputFile() {
+        val filePath = Paths.get("testfile.in")
+        Files.write(filePath, CONTENT.lines())
+
+        val problem = readHCInputFile(filePath) { readProblem() }
+        verifyProblemData(problem)
+
+        Files.delete(filePath)
+    }
+
+    @Test
+    fun `readHCInputFile() fails on IOException`() {
+        val filePath = Paths.get("unknown.in")
+
+        assertFailsWith<FileParsingException> {
+            readHCInputFile(filePath) { readProblem() }
+        }
+    }
+
+    private fun verifyProblemData(problem: Problem) {
         assertEquals(42, problem.param1.toLong())
         assertEquals(24, problem.param2.toLong())
         assertEquals(2, problem.nShapes.toLong())

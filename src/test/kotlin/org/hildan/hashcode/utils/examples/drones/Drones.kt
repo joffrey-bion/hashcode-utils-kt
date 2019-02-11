@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class DronesTestKt {
+class Drones {
 
     private val input = ("100 100 3 50 500\n"    // 100 rows, 100 columns, 3 drones, 50 turns, max payload is 500u
                     + "3\n"         // There are 3 different product types

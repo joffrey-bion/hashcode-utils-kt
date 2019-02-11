@@ -1,36 +1,40 @@
 package org.hildan.hashcode.utils.reader
 
 import java.io.Closeable
-import java.io.FileReader
 import java.io.IOException
 import java.io.LineNumberReader
 import java.io.Reader
 import java.io.StringReader
+import java.nio.file.Files
+import java.nio.file.Path
 
-private val DEFAULT_DELIMITER = Regex("""\s+""")
+/**
+ * The most likely delimiter to use in HashCode input files.
+ */
+val DEFAULT_HASHCODE_INPUT_DELIMITER = Regex("""\s+""")
 
 /**
  * Reads an instance of [P] from the given [input] text. This function provides an [HCReader] using the given
- * [tokenDelimiter] regex as delimiter (defaults to whitespace).
+ * [tokenDelimiter] regex (defaults to whitespace).
  */
-fun <P> readHCInputText(
+inline fun <P> readHCInputText(
     input: String,
-    tokenDelimiter: Regex = DEFAULT_DELIMITER,
+    tokenDelimiter: Regex = DEFAULT_HASHCODE_INPUT_DELIMITER,
     readProblem: HCReader.() -> P
 ): P = HCReader(StringReader(input), tokenDelimiter).use { it.readProblem() }
 
 /**
- * Reads an instance of [P] from the file with the given [filename]. This function provides an [HCReader] using the
- * given [tokenDelimiter] regex as delimiter (defaults to whitespace).
+ * Reads an instance of [P] from the file at the given [path]. This function provides an [HCReader] using the given
+ * [tokenDelimiter] regex (defaults to whitespace).
  */
-fun <P> readHCInputFile(
-    filename: String,
-    tokenDelimiter: Regex = DEFAULT_DELIMITER,
+inline fun <P> readHCInputFile(
+    path: Path,
+    tokenDelimiter: Regex = DEFAULT_HASHCODE_INPUT_DELIMITER,
     readProblem: HCReader.() -> P
 ): P = try {
-    HCReader(FileReader(filename), tokenDelimiter).use { it.readProblem() }
+    HCReader(Files.newBufferedReader(path), tokenDelimiter).use { it.readProblem() }
 } catch (e: Exception) {
-    throw FileParsingException(filename, e)
+    throw FileParsingException(path, e)
 }
 
 /**
@@ -39,7 +43,7 @@ fun <P> readHCInputFile(
  * @param reader the reader to use to read the input
  * @param tokenDelimiter the delimiter to use to separate tokens
  */
-class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_DELIMITER) : Closeable {
+class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_HASHCODE_INPUT_DELIMITER) : Closeable {
 
     private val reader: LineNumberReader = LineNumberReader(reader).apply { lineNumber = 0 }
 

@@ -1,5 +1,7 @@
 package org.hildan.hashcode.utils.reader
 
+import java.nio.file.Path
+
 /**
  * Thrown if the parsing of the input fails.
  */
@@ -37,7 +39,7 @@ class IncompleteLineReadException(lineNum: Int, unreadEndOfLine: String) :
 class NoMoreLinesToReadException : InputParsingException("End of input reached, cannot read more lines")
 
 /**
- * Thrown if an exception occurs while parsing a file, in order to provide the filename in the message.
+ * Thrown if an exception occurs while parsing a file, in order to provide the file's path in the message.
  */
-class FileParsingException(filename: String, cause: Exception):
-    RuntimeException("Exception occurred while solving the input file '$filename'", cause)
+class FileParsingException(filePath: Path, cause: Exception):
+    RuntimeException("Exception occurred while solving the input file '$filePath'", cause)

@@ -62,11 +62,12 @@ classes with the problem's data, with nice error handling and line numbers, whic
 For our little example problem, here's how you would write the parser:
 
 ```kotlin
+import java.nio.file.Paths
 import org.hildan.hashcode.utils.reader.readHCInputFile
 
 fun main(args: Array<String>) {
-    val filename = "problem.in"
-    val problem = readHCInputFile(filename) { // this: HCReader
+    val inputPath = Paths.get("problem.in")
+    val problem = readHCInputFile(inputPath) { // this: HCReader
         readProblem()
     }
     
@@ -74,15 +75,15 @@ fun main(args: Array<String>) {
 }
 
 private fun HCReader.readProblem(): Problem {
-    val nPoints = nextInt()
-    val nClusters = nextInt()
+    val nPoints = readInt()
+    val nClusters = readInt()
     val points = List(nPoints) { readPoint() }
     return Problem(nClusters, points)
 }
 
 private fun HCReader.readPoint(): Point {
-    val x = nextDouble()
-    val y = nextDouble()
+    val x = readDouble()
+    val y = readDouble()
     return Point(x, y)
 }
 ```
@@ -98,44 +99,36 @@ You may read more about the API directly in [HCReader](src/main/java/org/hildan/
 
 ### The output writer
 
-In addition to reading the input file, you also want to write the output lines to a file you can submit to the 
-HashCode Judge system. Outputting to the console and redirecting to a file is a solution, but it prevents you from 
-logging other stuff and monitoring what's going on in order to stop wasting time if things go out of hand.
+The top-level function `writeLinesToFile` allows you to write your output lines to a given file.
 
-It's usually better to just output to a file instead. For this, use the function `solveHCProblemAndWriteFile`:
+Outputting to the console and redirecting to a file could be a solution, but it prevents you from logging other stuff 
+and monitoring what's going on in order to stop wasting time if things go out of hand.
+
+### Read + write
+
+You can combine `readHCInputFile` and `writeLinesToFile` with `solveHCProblemAndWriteFile`:
 
 ```kotlin
-import org.hildan.hashcode.utils.writer.solveHCProblemAndWriteFile
+import org.hildan.hashcode.utils.solveHCProblemAndWriteFile
 
 fun main(args: Array<String>) {
-    val filename = "problem.in"
-    val outputFilename = "problem.out"
-    solveHCProblemAndWriteFile(filename, outputFilename) { // this: HCReader
+    val inputPath = Paths.get("problem.in")
+    val outputPath = Paths.get("problem.out")
+    solveHCProblemAndWriteFile(inputPath, outputPath) { // this: HCReader
         readProblem().solve()
     }
 }
 
-private fun HCReader.readProblem(): Problem {
-    val nPoints = nextInt()
-    val nClusters = nextInt()
-    val points = List(nPoints) { readPoint() }
-    return Problem(nClusters, points)
-}
-
-private fun HCReader.readPoint(): Point {
-    val x = nextDouble()
-    val y = nextDouble()
-    return Point(x, y)
-}
+// readProblem() declaration and model classes are unchanged
 ```
-
-This combines the reader and the writer in order to do everything in just a couple lines, and not waste time.
 
 The `readAndSolve` lambda can use the provided `HCReader` like in the previous example, and needs to return the lines
  to write to the output file, as an `Iterable<String>`.
 
-The output filename is actually optional and will computed from the input by replacing `.in` by `.out` and placing 
-the output file in the `output/` directory.
+The output path is actually optional and can be automatically computed from the input by replacing `.in` by `.out` 
+and replacing the `inputs/` directory, if present, by `outputs/`. The opinionated approach here is to place all input
+ files from the problem statement in an `inputs` directory, so that you get all the output in the `outputs` 
+ directory, ready to be uploaded.
 
 ### The runner
 
@@ -147,29 +140,21 @@ Let's assume you pass all input filenames as command line arguments. Then you ca
 ```kotlin
 import kotlinx.coroutines.runBlocking
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.runner.solveHCFilesInParallel
+import org.hildan.hashcode.utils.solveHCFilesInParallel
 
 fun main(args: Array<String>) = runBlocking {
-    solveHCFilesInParallel(*args) {
+    solveHCFilesInParallel(*args) { // this: HCReader
         readProblem().solve()
     }
 }
 
-private fun HCReader.readProblem(): Problem {
-    val P = readInt()
-    val C = readInt()
-    val points = List(P) { readPoint() }
-    return Problem(C, points)
-}
-
-private fun HCReader.readPoint(): Point {
-    val x = readDouble()
-    val y = readDouble()
-    return Point(x, y)
-}
+// readProblem() declaration and model classes are unchanged
 ```
 
-This combines all 3 features to make the most of this library. Happy HashCode!
+This combines all 3 features to make the most of this library. Just like before, you get an `HCReader` as receiver 
+for your lambda in order to read the input, and your lambda must return the output lines as an `Iterable<CharSequence>`.
+
+Happy HashCode!
 
 ## License
 

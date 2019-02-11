@@ -2,7 +2,7 @@ package org.hildan.hashcode.utils.examples.basic
 
 import kotlinx.coroutines.runBlocking
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.runner.solveHCFilesInParallel
+import org.hildan.hashcode.utils.solveHCFilesInParallel
 
 fun main(args: Array<String>) = runBlocking {
     solveHCFilesInParallel(*args) {
