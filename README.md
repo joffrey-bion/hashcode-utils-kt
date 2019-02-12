@@ -95,7 +95,7 @@ As you can see, `readHCInputFile` provides you with an instance of `HCReader` th
 To make the most of it, you should declare your own functions as extensions of `HCReader` so that it reads pretty 
 neatly. This way, you get access to all utility functions like `readInt`, `readString`, `readDouble`...
 
-You may read more about the API directly in [HCReader](src/main/java/org/hildan/hashcode/reader/HCReader.java)'s
+You may read more about the API directly in [HCReader](src/main/kotlin/org/hildan/hashcode/reader/HCReader.java)'s
  Javadocs.
 
 ### The output writer
