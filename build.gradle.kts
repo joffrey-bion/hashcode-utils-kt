@@ -1,7 +1,7 @@
 import com.jfrog.bintray.gradle.BintrayExtension.GpgConfig
+import com.jfrog.bintray.gradle.BintrayExtension.MavenCentralSyncConfig
 import com.jfrog.bintray.gradle.BintrayExtension.PackageConfig
 import com.jfrog.bintray.gradle.BintrayExtension.VersionConfig
-import com.jfrog.bintray.gradle.tasks.BintrayUploadTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -122,6 +122,11 @@ bintray {
             vcsTag = project.version.toString()
             gpg(closureOf<GpgConfig> {
                 sign = true
+            })
+            mavenCentralSync(closureOf<MavenCentralSyncConfig> {
+                sync = true
+                user = getPropOrEnv("ossrhUserToken", "OSSRH_USER_TOKEN")
+                password = getPropOrEnv("ossrhKey", "OSSRH_KEY")
             })
         })
     })
