@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "org.hildan.hashcode"
-version = "0.2.0"
+version = "0.2.1"
 description = "Utilities for programs solving Google HashCode problems"
 
 val Project.labels: Array<String>

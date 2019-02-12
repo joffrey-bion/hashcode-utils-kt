@@ -167,14 +167,14 @@ repositories {
 }
 
 dependencies {
-    compile 'org.hildan.hashcode:hashcode-utils-kt:0.2.0'
+    compile 'org.hildan.hashcode:hashcode-utils-kt:0.2.1'
 }
 ```
 
 Or with the Gradle Kotlin DSL:
 
 ```groovy
-compile("org.hildan.hashcode:hashcode-utils-kt:0.2.0")
+compile("org.hildan.hashcode:hashcode-utils-kt:0.2.1")
 ```
 
 ## License
