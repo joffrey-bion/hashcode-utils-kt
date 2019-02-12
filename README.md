@@ -1,4 +1,5 @@
 # Google HashCode utils for Kotlin
+[![Bintray](https://img.shields.io/bintray/v/joffrey-bion/maven/hashcode-utils-kt.svg?colorB=blue&style=flat)](https://bintray.com/joffrey-bion/maven/hashcode-utils-kt/_latestVersion)
 [![Build Status](https://travis-ci.org/joffrey-bion/hashcode-utils-kt.svg?branch=master)](https://travis-ci.org/joffrey-bion/hashcode-utils-kt)
 
 This library provides useful tools to make your life easier when competing in the Google Hash Code:
