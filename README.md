@@ -157,6 +157,26 @@ for your lambda in order to read the input, and your lambda must return the outp
 
 Happy HashCode!
 
+## Add the dependency
+
+Gradle dependency:
+
+```groovy
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.hildan.hashcode:hashcode-utils-kt:0.2.0'
+}
+```
+
+Or with the Gradle Kotlin DSL:
+
+```groovy
+compile("org.hildan.hashcode:hashcode-utils-kt:0.2.0")
+```
+
 ## License
 
 Code released under the [MIT license](LICENSE).
