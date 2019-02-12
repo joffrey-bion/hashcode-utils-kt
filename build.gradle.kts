@@ -126,7 +126,7 @@ bintray {
         })
     })
 }
-tasks.withType<BintrayUploadTask>().all { dependsOn(tasks.build) }
+tasks.bintrayUpload.get().dependsOn(tasks.build)
 
 fun Project.getPropOrEnv(propName: String, envVar: String? = null): String? =
     findProperty(propName) as String? ?: System.getenv(envVar)
