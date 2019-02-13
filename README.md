@@ -1,5 +1,6 @@
 # Google HashCode utils for Kotlin
-[![Bintray](https://img.shields.io/bintray/v/joffrey-bion/maven/hashcode-utils-kt.svg?colorB=blue&style=flat)](https://bintray.com/joffrey-bion/maven/hashcode-utils-kt/_latestVersion)
+[![Bintray](https://img.shields.io/bintray/v/joffrey-bion/maven/hashcode-utils-kt.svg?colorB=blue&style=flat&label=jcenter)](https://bintray.com/joffrey-bion/maven/hashcode-utils-kt/_latestVersion)
+[![Maven central version](https://img.shields.io/maven-central/v/org.hildan.hashcode/hashcode-utils-kt.svg)](http://mvnrepository.com/artifact/org.hildan.hashcode/hashcode-utils-kt)
 [![Build Status](https://travis-ci.org/joffrey-bion/hashcode-utils-kt.svg?branch=master)](https://travis-ci.org/joffrey-bion/hashcode-utils-kt)
 
 This library provides useful tools to make your life easier when competing in the Google Hash Code:
@@ -162,10 +163,6 @@ Happy HashCode!
 Gradle dependency:
 
 ```groovy
-repositories {
-    jcenter()
-}
-
 dependencies {
     compile 'org.hildan.hashcode:hashcode-utils-kt:0.2.1'
 }
