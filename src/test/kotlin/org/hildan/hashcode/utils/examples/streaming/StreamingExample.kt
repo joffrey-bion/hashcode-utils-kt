@@ -1,7 +1,7 @@
 package org.hildan.hashcode.utils.examples.streaming
 
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.reader.readHCInputText
+import org.hildan.hashcode.utils.reader.withHCReader
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -62,7 +62,7 @@ class StreamingExample {
 
     @Test
     fun test_parser() {
-        val problem = readHCInputText(input) { readStreamingProblem() }
+        val problem = withHCReader(input) { readStreamingProblem() }
 
         assertEquals(5, problem.nVideos.toLong())
         assertEquals(2, problem.nEndpoints.toLong())

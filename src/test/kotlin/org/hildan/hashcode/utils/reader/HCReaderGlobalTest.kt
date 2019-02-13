@@ -56,28 +56,28 @@ class HCReaderGlobalTest {
     }
 
     @Test
-    fun readHCInputText() {
-        val problem = readHCInputText(CONTENT) { readProblem() }
+    fun `withHCReader() on text`() {
+        val problem = withHCReader(CONTENT) { readProblem() }
         verifyProblemData(problem)
     }
 
     @Test
-    fun readHCInputFile() {
+    fun `withHCReader() on file`() {
         val filePath = Paths.get("testfile.in")
         Files.write(filePath, CONTENT.lines())
 
-        val problem = readHCInputFile(filePath) { readProblem() }
+        val problem = withHCReader(filePath) { readProblem() }
         verifyProblemData(problem)
 
         Files.delete(filePath)
     }
 
     @Test
-    fun `readHCInputFile() fails on IOException`() {
+    fun `withHCReader() fails on IOException`() {
         val filePath = Paths.get("unknown.in")
 
         assertFailsWith<FileParsingException> {
-            readHCInputFile(filePath) { readProblem() }
+            withHCReader(filePath) { readProblem() }
         }
     }
 

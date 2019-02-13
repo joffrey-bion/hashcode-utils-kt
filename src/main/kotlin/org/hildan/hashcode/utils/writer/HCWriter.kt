@@ -7,11 +7,10 @@ import java.nio.file.Path
  * Writes the given [lines] to a file at the given [path]. All necessary parent directories are created if they don't
  * exist. The output file is overwritten if already existing.
  */
-fun writeLinesToFile(path: Path, lines: Iterable<CharSequence>) {
+fun writeHCOutputFile(path: Path, lines: Iterable<CharSequence>) {
     try {
-        val parentDir = path.parent
-        if (parentDir != null) {
-            Files.createDirectories(parentDir)
+        if (path.parent != null) {
+            Files.createDirectories(path.parent)
         }
         Files.write(path, lines)
     } catch (e: Exception) {

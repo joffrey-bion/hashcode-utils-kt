@@ -40,7 +40,7 @@ internal class HCUtilsTest {
         Files.delete(outputFilePath)
     }
 
-    @ParameterizedTest(name = "computeOutputFilename(''{0}'') = ''{1}''")
+    @ParameterizedTest(name = "computeHCOutputPath(''{0}'') = ''{1}''")
     @CsvSource(
         value = [
             "myInput, myInput.out",
@@ -55,6 +55,6 @@ internal class HCUtilsTest {
         ]
     )
     fun computeOutputFilename(input: String, expectedOutput: String) {
-        assertEquals(Paths.get(expectedOutput), computeOutputFilename(Paths.get(input)))
+        assertEquals(Paths.get(expectedOutput), computeHCOutputPath(Paths.get(input)))
     }
 }

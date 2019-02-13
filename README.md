@@ -58,20 +58,16 @@ with the rest.
 
 ### The input reader
 
-The functions `readHCInputText` and `readHCInputFile` allow you to read HashCode input and populate your model 
-classes with the problem's data, with nice error handling and line numbers, which saves a lot of time.
-
-For our little example problem, here's how you would write the parser:
+The first thing you need is to read the input file and populate your model classes with the problem's data.
+For our little example problem, here's how you would parse the input using HashCode Utils:
 
 ```kotlin
 import java.nio.file.Paths
-import org.hildan.hashcode.utils.reader.readHCInputFile
+import org.hildan.hashcode.utils.reader.withHCReader
 
 fun main(args: Array<String>) {
     val inputPath = Paths.get("problem.in")
-    val problem = readHCInputFile(inputPath) { // this: HCReader
-        readProblem()
-    }
+    val problem = withHCReader(inputPath) { readProblem() }
     
     // solve the problem and write the output
 }
@@ -90,32 +86,33 @@ private fun HCReader.readPoint(): Point {
 }
 ```
 
-As you can see, `readHCInputFile` provides you with an instance of `HCReader` that you can use to read tokens from the
- input.
+The function `withHCReader` provides you with an instance of `HCReader` that you can use to read tokens from the 
+input. `HCReader` provides primitives like `readInt`, `readString`, `readDouble`, as well as error handling with line 
+numbers, which saves a lot of time.
  
 To make the most of it, you should declare your own functions as extensions of `HCReader` so that it reads pretty 
-neatly. This way, you get access to all utility functions like `readInt`, `readString`, `readDouble`...
+neatly.
 
 You may read more about the API directly in [HCReader](src/main/kotlin/org/hildan/hashcode/reader/HCReader.java)'s
  Javadocs.
 
 ### The output writer
 
-The top-level function `writeLinesToFile` allows you to write your output lines to a given file.
+The top-level function `writeHCOutputFile(path, lines)` allows you to write your output lines to a given file.
 
 Outputting to the console and redirecting to a file could be a solution, but it prevents you from logging other stuff 
 and monitoring what's going on in order to stop wasting time if things go out of hand.
 
 ### Read + write
 
-You can combine `readHCInputFile` and `writeLinesToFile` with `solveHCProblemAndWriteFile`:
+In fact, you can do all of the above with a single function call, using `solveHCProblemAndWriteFile`:
 
 ```kotlin
 import org.hildan.hashcode.utils.solveHCProblemAndWriteFile
 
 fun main(args: Array<String>) {
-    val inputPath = Paths.get("problem.in")
-    val outputPath = Paths.get("problem.out")
+    val inputPath = Paths.get("problem1.in")
+    val outputPath = Paths.get("problem1.out")
     solveHCProblemAndWriteFile(inputPath, outputPath) { // this: HCReader
         readProblem().solve()
     }
@@ -125,12 +122,12 @@ fun main(args: Array<String>) {
 ```
 
 The `readAndSolve` lambda can use the provided `HCReader` like in the previous example, and needs to return the lines
- to write to the output file, as an `Iterable<String>`.
+to write to the output file, as an `Iterable<CharSequence>` (e.g. `List<String>`).
 
 The output path is actually optional and can be automatically computed from the input by replacing `.in` by `.out` 
 and replacing the `inputs/` directory, if present, by `outputs/`. The opinionated approach here is to place all input
- files from the problem statement in an `inputs` directory, so that you get all the output in the `outputs` 
- directory, ready to be uploaded.
+files from the problem statement in an `inputs` directory, so that you get all the output in the `outputs` 
+directory, ready to be uploaded.
 
 ### The runner
 
@@ -162,16 +159,10 @@ Happy HashCode!
 
 Gradle dependency:
 
-```groovy
+```kotlin
 dependencies {
-    compile 'org.hildan.hashcode:hashcode-utils-kt:0.2.1'
+    compile("org.hildan.hashcode:hashcode-utils-kt:0.2.1")
 }
-```
-
-Or with the Gradle Kotlin DSL:
-
-```groovy
-compile("org.hildan.hashcode:hashcode-utils-kt:0.2.1")
 ```
 
 ## License

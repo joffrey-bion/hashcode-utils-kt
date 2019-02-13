@@ -1,7 +1,7 @@
 package org.hildan.hashcode.utils.examples.satellites
 
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.reader.readHCInputText
+import org.hildan.hashcode.utils.reader.withHCReader
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -73,7 +73,7 @@ class Satellites {
 
     @Test
     fun test_parser() {
-        val problem = readHCInputText(input) { readSimulation() }
+        val problem = withHCReader(input) { readSimulation() }
 
         assertEquals(3600, problem.nTurns.toLong())
         assertEquals(2, problem.satellites.size.toLong())

@@ -14,20 +14,20 @@ import java.nio.file.Path
 val DEFAULT_HASHCODE_INPUT_DELIMITER = Regex("""\s+""")
 
 /**
- * Reads an instance of [P] from the given [input] text. This function provides an [HCReader] using the given
- * [tokenDelimiter] regex (defaults to whitespace).
+ * Executes the given [readProblem] function on a new [HCReader], reading the given [input] text. The reader is closed
+ * whether an exception is thrown or not.
  */
-inline fun <P> readHCInputText(
+inline fun <P> withHCReader(
     input: String,
     tokenDelimiter: Regex = DEFAULT_HASHCODE_INPUT_DELIMITER,
     readProblem: HCReader.() -> P
 ): P = HCReader(StringReader(input), tokenDelimiter).use { it.readProblem() }
 
 /**
- * Reads an instance of [P] from the file at the given [path]. This function provides an [HCReader] using the given
- * [tokenDelimiter] regex (defaults to whitespace).
+ * Executes the given [readProblem] function on a new [HCReader], reading the file at the given [path]. The reader is
+ * closed whether an exception is thrown or not.
  */
-inline fun <P> readHCInputFile(
+inline fun <P> withHCReader(
     path: Path,
     tokenDelimiter: Regex = DEFAULT_HASHCODE_INPUT_DELIMITER,
     readProblem: HCReader.() -> P

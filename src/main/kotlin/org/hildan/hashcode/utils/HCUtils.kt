@@ -1,10 +1,10 @@
 package org.hildan.hashcode.utils
 
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.reader.readHCInputFile
+import org.hildan.hashcode.utils.reader.withHCReader
 import org.hildan.hashcode.utils.runner.UncaughtExceptionsLogger
 import org.hildan.hashcode.utils.runner.runInParallel
-import org.hildan.hashcode.utils.writer.writeLinesToFile
+import org.hildan.hashcode.utils.writer.writeHCOutputFile
 import java.nio.file.Path
 import java.nio.file.Paths
 
@@ -14,23 +14,23 @@ import java.nio.file.Paths
  *
  * @param inputFilePath the path to the input file
  * @param outputFilePath the path to the output file (will be overwritten if it exists). By default, the output file
- * is computed from the input filename using [computeOutputFilename].
+ * is computed from the input filename using [computeHCOutputPath].
  * @param readAndSolve a function that reads the problem, solves it, and returns the output lines to write
  */
 inline fun solveHCProblemAndWriteFile(
     inputFilePath: Path,
-    outputFilePath: Path = computeOutputFilename(inputFilePath),
+    outputFilePath: Path = computeHCOutputPath(inputFilePath),
     readAndSolve: HCReader.() -> Iterable<CharSequence>
 ) {
-    val outputLines = readHCInputFile(inputFilePath) { readAndSolve() }
-    writeLinesToFile(outputFilePath, outputLines)
+    val outputLines = withHCReader(inputFilePath) { readAndSolve() }
+    writeHCOutputFile(outputFilePath, outputLines)
 }
 
 /**
  * Computes the output file path based on the input file path. If there is a `.in` extension, it is changed to `.out`,
  * otherwise `.out` is simply appended. If there is a parent folder called `inputs`, it is changed to `outputs`.
  */
-fun computeOutputFilename(inputPath: Path): Path {
+fun computeHCOutputPath(inputPath: Path): Path {
     val normalized = inputPath.normalize()
 
     val parent: Path? = normalized.parent

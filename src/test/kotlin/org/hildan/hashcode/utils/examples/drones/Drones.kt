@@ -1,7 +1,7 @@
 package org.hildan.hashcode.utils.examples.drones
 
 import org.hildan.hashcode.utils.reader.HCReader
-import org.hildan.hashcode.utils.reader.readHCInputText
+import org.hildan.hashcode.utils.reader.withHCReader
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -62,7 +62,7 @@ class Drones {
 
     @Test
     fun test() {
-        val problem = readHCInputText(input) { readSimulation() }
+        val problem = withHCReader(input) { readSimulation() }
 
         assertEquals(100, problem.nRows.toLong())
         assertEquals(100, problem.nCols.toLong())
