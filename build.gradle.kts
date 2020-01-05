@@ -5,7 +5,7 @@ import com.jfrog.bintray.gradle.BintrayExtension.VersionConfig
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.21"
+    kotlin("jvm") version "1.3.61"
     `maven-publish`
     id("org.jetbrains.dokka") version "0.9.17"
     id("com.jfrog.bintray") version "1.8.4"
