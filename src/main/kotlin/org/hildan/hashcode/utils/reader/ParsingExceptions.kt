@@ -24,8 +24,8 @@ open class InputParsingException : RuntimeException {
 /**
  * Thrown if the parsing ends while there is still input to read.
  */
-class IncompleteInputReadException(nbLinesLeft: Int) :
-    InputParsingException("The end of the input was not consumed, $nbLinesLeft lines remaining")
+class IncompleteInputReadException(lineNumber: Int, nextTokenIndex: Int) :
+    InputParsingException("The end of the input was not consumed (stopped at line $lineNumber, next token $nextTokenIndex).")
 
 /**
  * Thrown if the next line is accessed while the current line has not been fully consumed.

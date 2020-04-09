@@ -156,7 +156,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_HASHC
                 throw IncompleteLineReadException(lineNumber, remainingInputOnCurrentLine())
             }
             val nextLine = reader.readLine() ?: throw NoMoreLinesToReadException()
-            currentLineTokens = if (nextLine.isEmpty()) emptyList() else nextLine.split(tokenDelimiter)
+            currentLineTokens = nextLine.tokenize()
             currentLineText = nextLine
             nextTokenIndex = 0
         } catch (e: IOException) {
@@ -177,14 +177,16 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_HASHC
      */
     override fun close() {
         try {
-            val nbLinesLeft = reader.useLines { it.count() }
-            if (nbLinesLeft > 0) {
-                throw IncompleteInputReadException(nbLinesLeft)
+            val remainingText = reader.use { it.readText() }
+            if (hasMoreTokensInCurrentLine() || remainingText.tokenize().isNotEmpty()) {
+                throw IncompleteInputReadException(lineNumber, nextTokenIndex)
             }
         } catch (e: IOException) {
             throw InputParsingException("An error occurred while consuming the end of the input", e)
         }
     }
+
+    private fun String.tokenize() = split(tokenDelimiter).dropWhile { it.isEmpty() }
 
     private fun parseError(msg: String): Nothing = throw InputParsingException(lineNumber, nextTokenIndex, msg)
 }

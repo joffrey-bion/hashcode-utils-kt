@@ -173,6 +173,13 @@ class HCReaderTest {
     }
 
     @Test
+    fun `close() should not fail on unconsumed blank lines`() {
+        val hcr = hcReader("hello\n\n  \n")
+        hcr.readString()
+        hcr.close()
+    }
+
+    @Test
     fun `close() should fail on IOException`() {
         val hcr = HCReader(FailingReader())
         assertFailsWith<InputParsingException> { hcr.close() }
