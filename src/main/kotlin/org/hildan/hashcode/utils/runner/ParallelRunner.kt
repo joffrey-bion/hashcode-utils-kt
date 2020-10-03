@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.Collections
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Runs the given function on each of the given input, each in its own coroutine.
