@@ -5,7 +5,7 @@ import com.jfrog.bintray.gradle.BintrayExtension.VersionConfig
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.71"
+    kotlin("jvm") version "1.4.10"
     `maven-publish`
     id("org.jetbrains.dokka") version "0.10.0"
     id("com.jfrog.bintray") version "1.8.4"
@@ -26,8 +26,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
     implementation("org.slf4j:slf4j-api:1.7.24")
 
     testImplementation(kotlin("test"))
