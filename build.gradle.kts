@@ -9,6 +9,7 @@ plugins {
     `maven-publish`
     id("org.jetbrains.dokka") version "1.4.20"
     id("com.jfrog.bintray") version "1.8.4"
+    id("org.hildan.github.changelog") version "0.8.0"
 }
 
 group = "org.hildan.hashcode"
@@ -20,6 +21,10 @@ val Project.labels: Array<String>
 
 val Project.licenses: Array<String>
     get() = arrayOf("MIT")
+
+changelog {
+    futureVersionTag = project.version.toString()
+}
 
 repositories {
     jcenter()
