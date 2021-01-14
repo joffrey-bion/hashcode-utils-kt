@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.4.21"
     `maven-publish`
-    id("org.jetbrains.dokka") version "0.10.0"
+    id("org.jetbrains.dokka") version "1.4.20"
     id("com.jfrog.bintray") version "1.8.4"
 }
 
@@ -46,21 +46,16 @@ val githubRepoName = rootProject.name
 val githubSlug = "$githubUser/${rootProject.name}"
 val githubRepoUrl = "https://github.com/$githubSlug"
 
-tasks.dokka {
-    outputFormat = "html"
-    outputDirectory = "$buildDir/javadoc"
-}
-
 val sourcesJar by tasks.creating(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
 }
 
-val dokkaJar by tasks.creating(Jar::class) {
+val dokkaJavadocJar by tasks.creating(Jar::class) {
     group = JavaBasePlugin.DOCUMENTATION_GROUP
-    description = "Assembles Kotlin docs with Dokka"
+    description = "Assembles Kotlin docs with Dokka into a Javadoc jar"
     archiveClassifier.set("javadoc")
-    from(tasks.dokka)
+    from(tasks.dokkaJavadoc)
 }
 
 publishing {
@@ -69,7 +64,7 @@ publishing {
             from(components["java"])
 
             artifact(sourcesJar)
-            artifact(dokkaJar)
+            artifact(dokkaJavadocJar)
 
             pom {
                 name.set(project.name)
