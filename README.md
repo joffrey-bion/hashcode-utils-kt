@@ -162,7 +162,7 @@ Gradle dependency:
 
 ```kotlin
 dependencies {
-    compile("org.hildan.hashcode:hashcode-utils-kt:0.3.1")
+    compile("org.hildan.hashcode:hashcode-utils-kt:$version")
 }
 ```
 
