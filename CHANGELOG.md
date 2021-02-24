@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.1.0](https://github.com/joffrey-bion/hashcode-utils-kt/tree/1.1.0) (2021-02-24)
+[Full Changelog](https://github.com/joffrey-bion/hashcode-utils-kt/compare/1.0.0...1.1.0)
+
+**Closed issues:**
+
+- Critical: publish directly to Maven Central [\#7](https://github.com/joffrey-bion/hashcode-utils-kt/issues/7)
+
 ## [1.0.0](https://github.com/joffrey-bion/hashcode-utils-kt/tree/1.0.0) (2021-01-14)
 [Full Changelog](https://github.com/joffrey-bion/hashcode-utils-kt/compare/0.3.1...1.0.0)
 
