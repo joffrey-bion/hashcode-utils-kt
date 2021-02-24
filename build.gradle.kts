@@ -1,31 +1,23 @@
-import com.jfrog.bintray.gradle.BintrayExtension.GpgConfig
-import com.jfrog.bintray.gradle.BintrayExtension.MavenCentralSyncConfig
-import com.jfrog.bintray.gradle.BintrayExtension.PackageConfig
-import com.jfrog.bintray.gradle.BintrayExtension.VersionConfig
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.4.21"
-    `maven-publish`
     id("org.jetbrains.dokka") version "1.4.20"
-    id("com.jfrog.bintray") version "1.8.4"
-    id("org.hildan.github.changelog") version "0.8.0"
+    signing
+    id("io.codearte.nexus-staging") version "0.22.0"
+    id("de.marcphilipp.nexus-publish") version "0.4.0"
+    id("org.hildan.github.changelog") version "1.3.0"
 }
 
 group = "org.hildan.hashcode"
 description = "Utilities for programs solving Google HashCode problems"
-
-val Project.labels: Array<String>
-    get() = arrayOf("google", "hashcode", "utils", "kotlin", "hashcode-utils", "hashcode-utils-kt")
-
-val Project.licenses: Array<String>
-    get() = arrayOf("MIT")
 
 changelog {
     futureVersionTag = project.version.toString()
 }
 
 repositories {
+    mavenCentral()
     jcenter()
 }
 
@@ -45,8 +37,7 @@ tasks.withType<KotlinCompile>().all {
     }
 }
 
-val githubUser = getPropOrEnv("githubUser", "GITHUB_USER")
-val githubRepoName = rootProject.name
+val githubUser = findProperty("githubUser") as String? ?: System.getenv("GITHUB_USER")
 val githubSlug = "$githubUser/${rootProject.name}"
 val githubRepoUrl = "https://github.com/$githubSlug"
 
@@ -60,6 +51,20 @@ val dokkaJavadocJar by tasks.creating(Jar::class) {
     description = "Assembles Kotlin docs with Dokka into a Javadoc jar"
     archiveClassifier.set("javadoc")
     from(tasks.dokkaJavadoc)
+}
+
+nexusStaging {
+    packageGroup = "org.hildan"
+    numberOfRetries = 30
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username.set(System.getenv("OSSRH_USER_TOKEN"))
+            password.set(System.getenv("OSSRH_KEY"))
+        }
+    }
 }
 
 publishing {
@@ -97,39 +102,9 @@ publishing {
     }
 }
 
-bintray {
-    user = getPropOrEnv("bintrayUser", "BINTRAY_USER")
-    key = getPropOrEnv("bintrayApiKey", "BINTRAY_KEY")
-    setPublications("maven")
-    publish = true
-
-    pkg(closureOf<PackageConfig> {
-        repo = getPropOrEnv("bintrayRepo", "BINTRAY_REPO")
-        name = project.name
-        desc = project.description
-        setLabels(*project.labels)
-        setLicenses(*project.licenses)
-
-        websiteUrl = githubRepoUrl
-        issueTrackerUrl = "$githubRepoUrl/issues"
-        vcsUrl = "$githubRepoUrl.git"
-        githubRepo = githubSlug
-
-        version(closureOf<VersionConfig> {
-            desc = project.description
-            vcsTag = project.version.toString()
-            gpg(closureOf<GpgConfig> {
-                sign = true
-            })
-            mavenCentralSync(closureOf<MavenCentralSyncConfig> {
-                sync = true
-                user = getPropOrEnv("ossrhUserToken", "OSSRH_USER_TOKEN")
-                password = getPropOrEnv("ossrhKey", "OSSRH_KEY")
-            })
-        })
-    })
+signing {
+    val signingKey: String? by project
+    val signingPassword: String? by project
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["maven"])
 }
-tasks.bintrayUpload.get().dependsOn(tasks.build)
-
-fun Project.getPropOrEnv(propName: String, envVar: String? = null): String? =
-    findProperty(propName) as String? ?: System.getenv(envVar)
