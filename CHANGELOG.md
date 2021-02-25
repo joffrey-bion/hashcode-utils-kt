@@ -1,5 +1,12 @@
 # Change Log
 
+## [1.1.1](https://github.com/joffrey-bion/hashcode-utils-kt/tree/1.1.1) (2021-02-25)
+[Full Changelog](https://github.com/joffrey-bion/hashcode-utils-kt/compare/1.1.0...1.1.1)
+
+**Fixed bugs:**
+
+- HCReader doesn't accept trailing whitespace [\#9](https://github.com/joffrey-bion/hashcode-utils-kt/issues/9)
+
 ## [1.1.0](https://github.com/joffrey-bion/hashcode-utils-kt/tree/1.1.0) (2021-02-24)
 [Full Changelog](https://github.com/joffrey-bion/hashcode-utils-kt/compare/1.0.0...1.1.0)
 
