@@ -27,7 +27,8 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.4.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
 tasks.withType<KotlinCompile>().all {
@@ -35,6 +36,10 @@ tasks.withType<KotlinCompile>().all {
         jvmTarget = "1.8"
         freeCompilerArgs = listOf("-Xjsr305=strict")
     }
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
 }
 
 val githubUser = findProperty("githubUser") as String? ?: System.getenv("GITHUB_USER")

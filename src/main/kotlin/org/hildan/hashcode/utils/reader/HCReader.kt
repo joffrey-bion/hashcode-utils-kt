@@ -186,7 +186,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_HASHC
         }
     }
 
-    private fun String.tokenize() = split(tokenDelimiter).dropWhile { it.isEmpty() }
+    private fun String.tokenize() = split(tokenDelimiter).filter { it.isNotEmpty() }
 
     private fun parseError(msg: String): Nothing = throw InputParsingException(lineNumber, nextTokenIndex, msg)
 }

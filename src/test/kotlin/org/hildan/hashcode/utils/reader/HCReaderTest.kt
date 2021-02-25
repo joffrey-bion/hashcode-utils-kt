@@ -155,6 +155,15 @@ class HCReaderTest {
     }
 
     @Test
+    fun `reads should not fail on trailing whitespace`() {
+        val hcr = hcReader("1 2 \n3 4\n")
+        assertEquals(1, hcr.readInt())
+        assertEquals(2, hcr.readInt())
+        assertEquals(3, hcr.readInt())
+        assertEquals(4, hcr.readInt())
+    }
+
+    @Test
     fun `close() standard case`() {
         val hcr = hcReader("hello world")
         assertEquals("hello world", hcr.nextLineText())
@@ -175,6 +184,13 @@ class HCReaderTest {
     @Test
     fun `close() should not fail on unconsumed blank lines`() {
         val hcr = hcReader("hello\n\n  \n")
+        hcr.readString()
+        hcr.close()
+    }
+
+    @Test
+    fun `close() should not fail on unconsumed whitespace`() {
+        val hcr = hcReader("hello  \n")
         hcr.readString()
         hcr.close()
     }
