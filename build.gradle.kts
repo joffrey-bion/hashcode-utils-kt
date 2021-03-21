@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.4.21"
     id("org.jetbrains.dokka") version "1.4.20"
+    `maven-publish`
     signing
-    id("io.codearte.nexus-staging") version "0.22.0"
-    id("de.marcphilipp.nexus-publish") version "0.4.0"
-    id("org.hildan.github.changelog") version "1.3.0"
+    id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
+    id("org.hildan.github.changelog") version "1.6.0"
 }
 
 group = "org.hildan.hashcode"
@@ -42,10 +42,6 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-val githubUser = findProperty("githubUser") as String? ?: System.getenv("GITHUB_USER")
-val githubSlug = "$githubUser/${rootProject.name}"
-val githubRepoUrl = "https://github.com/$githubSlug"
-
 val sourcesJar by tasks.creating(Jar::class) {
     archiveClassifier.set("sources")
     from(sourceSets.main.get().allSource)
@@ -58,17 +54,10 @@ val dokkaJavadocJar by tasks.creating(Jar::class) {
     from(tasks.dokkaJavadoc)
 }
 
-nexusStaging {
-    packageGroup = "org.hildan"
-    numberOfRetries = 30
-}
-
 nexusPublishing {
+    packageGroup.set("org.hildan")
     repositories {
-        sonatype {
-            username.set(System.getenv("OSSRH_USER_TOKEN"))
-            password.set(System.getenv("OSSRH_KEY"))
-        }
+        sonatype()
     }
 }
 
@@ -79,6 +68,10 @@ publishing {
 
             artifact(sourcesJar)
             artifact(dokkaJavadocJar)
+
+            val githubUser = findProperty("githubUser") as String? ?: System.getenv("GITHUB_USER")
+            val githubSlug = "$githubUser/${rootProject.name}"
+            val githubRepoUrl = "https://github.com/$githubSlug"
 
             pom {
                 name.set(project.name)
