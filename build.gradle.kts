@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.21"
-    id("org.jetbrains.dokka") version "1.4.20"
+    kotlin("jvm") version "1.4.31"
+    id("org.jetbrains.dokka") version "1.4.30"
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
