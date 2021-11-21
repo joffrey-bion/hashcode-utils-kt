@@ -1,7 +1,8 @@
 package org.hildan.hashcode.utils.writer
 
-import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.createDirectories
+import kotlin.io.path.writeLines
 
 /**
  * Writes the given [lines] to a file at the given [path]. All necessary parent directories are created if they don't
@@ -9,10 +10,8 @@ import java.nio.file.Path
  */
 fun writeHCOutputFile(path: Path, lines: Iterable<CharSequence>) {
     try {
-        if (path.parent != null) {
-            Files.createDirectories(path.parent)
-        }
-        Files.write(path, lines)
+        path.parent?.createDirectories()
+        path.writeLines(lines)
     } catch (e: Exception) {
         throw SolutionWritingException("Exception occurred while writing to the output file '$path'", e)
     }

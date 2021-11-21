@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.31"
-    id("org.jetbrains.dokka") version "1.4.30"
+    kotlin("jvm") version "1.6.0"
+    id("org.jetbrains.dokka") version "1.5.31"
     `maven-publish`
     signing
     id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
-    id("org.hildan.github.changelog") version "1.6.0"
+    id("org.hildan.github.changelog") version "1.8.0"
 }
 
 group = "org.hildan.hashcode"
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.slf4j:slf4j-api:1.7.24")
 
     testImplementation(kotlin("test"))

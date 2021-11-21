@@ -4,9 +4,8 @@ import java.io.Closeable
 import java.io.IOException
 import java.io.LineNumberReader
 import java.io.Reader
-import java.io.StringReader
-import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.bufferedReader
 
 /**
  * The most likely delimiter to use in HashCode input files.
@@ -21,7 +20,7 @@ inline fun <P> withHCReader(
     input: String,
     tokenDelimiter: Regex = DEFAULT_HASHCODE_INPUT_DELIMITER,
     readProblem: HCReader.() -> P
-): P = HCReader(StringReader(input), tokenDelimiter).use { it.readProblem() }
+): P = HCReader(input.reader(), tokenDelimiter).use { it.readProblem() }
 
 /**
  * Executes the given [readProblem] function on a new [HCReader], reading the file at the given [path]. The reader is
@@ -32,7 +31,7 @@ inline fun <P> withHCReader(
     tokenDelimiter: Regex = DEFAULT_HASHCODE_INPUT_DELIMITER,
     readProblem: HCReader.() -> P
 ): P = try {
-    HCReader(Files.newBufferedReader(path), tokenDelimiter).use { it.readProblem() }
+    HCReader(path.bufferedReader(), tokenDelimiter).use { it.readProblem() }
 } catch (e: Exception) {
     throw FileParsingException(path, e)
 }
@@ -65,9 +64,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_HASHC
      * @throws InputParsingException if an error occurs while reading the input
      */
     fun skip(n: Int = 1) {
-        if (n < 0) {
-            throw IllegalArgumentException("The number of elements to skip cannot be negative")
-        }
+        require(n >= 0) { "The number of elements to skip cannot be negative" }
         repeat(n) { nextToken() }
     }
 
@@ -100,7 +97,7 @@ class HCReader(reader: Reader, private val tokenDelimiter: Regex = DEFAULT_HASHC
     }
 
     /**
-     * Reads the next token of the input as a boolean.
+     * Reads the next token of the input as a boolean value ("true" or "false" ignoring case).
      *
      * @throws NoMoreLinesToReadException if the last token of the line was consumed and there is no more lines to read
      * @throws InputParsingException if the input could not be parsed as a boolean
