@@ -22,11 +22,11 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-    implementation("org.slf4j:slf4j-api:1.7.24")
+    implementation("org.slf4j:slf4j-api:1.7.32")
 
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.6.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
