@@ -18,7 +18,6 @@ changelog {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
