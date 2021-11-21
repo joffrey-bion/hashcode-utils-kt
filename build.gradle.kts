@@ -33,11 +33,10 @@ dependencies {
 tasks.withType<KotlinCompile>().all {
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xjsr305=strict")
     }
 }
 
-tasks.named<Test>("test") {
+tasks.test {
     useJUnitPlatform()
 }
 
