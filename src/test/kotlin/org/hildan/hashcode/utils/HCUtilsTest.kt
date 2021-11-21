@@ -4,9 +4,9 @@ import org.hildan.hashcode.utils.reader.HCReader
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import java.nio.file.Files
-import java.nio.file.Paths
+import kotlin.io.path.*
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class HCUtilsTest {
 
@@ -25,19 +25,19 @@ internal class HCUtilsTest {
 
     @Test
     fun solveHCProblemAndWriteFile() {
-        val inputFilePath = Paths.get("testfile.in")
-        val outputFilePath = Paths.get("testfile.out")
-        Files.write(inputFilePath, listOf("42", "abc def ghi"))
+        val inputFilePath = Path("testfile.in")
+        val outputFilePath = Path("testfile.out")
+        inputFilePath.writeText("42\nabc def ghi")
 
         solveHCProblemAndWriteFile(inputFilePath) { readProblem().solve() }
-        kotlin.test.assertTrue(Files.exists(outputFilePath))
+        assertTrue(outputFilePath.exists())
 
-        val lines = Files.readAllLines(outputFilePath)
+        val lines = outputFilePath.readLines()
         val expectedLines = listOf("abc42", "def42", "ghi42")
-        kotlin.test.assertEquals(expectedLines, lines)
+        assertEquals(expectedLines, lines)
 
-        Files.delete(inputFilePath)
-        Files.delete(outputFilePath)
+        inputFilePath.deleteExisting()
+        outputFilePath.deleteExisting()
     }
 
     @ParameterizedTest(name = "computeHCOutputPath(''{0}'') = ''{1}''")
@@ -55,6 +55,6 @@ internal class HCUtilsTest {
         ]
     )
     fun computeOutputFilename(input: String, expectedOutput: String) {
-        assertEquals(Paths.get(expectedOutput), computeHCOutputPath(Paths.get(input)))
+        assertEquals(Path(expectedOutput), computeHCOutputPath(Path(input)))
     }
 }

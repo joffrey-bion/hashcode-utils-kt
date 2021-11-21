@@ -1,8 +1,9 @@
 package org.hildan.hashcode.utils.reader
 
 import org.junit.jupiter.api.Test
-import java.nio.file.Files
-import java.nio.file.Paths
+import kotlin.io.path.Path
+import kotlin.io.path.deleteExisting
+import kotlin.io.path.writeText
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
@@ -63,18 +64,17 @@ class HCReaderGlobalTest {
 
     @Test
     fun `withHCReader() on file`() {
-        val filePath = Paths.get("testfile.in")
-        Files.write(filePath, CONTENT.lines())
+        val filePath = Path("testfile.in").apply { writeText(CONTENT) }
 
         val problem = withHCReader(filePath) { readProblem() }
         verifyProblemData(problem)
 
-        Files.delete(filePath)
+        filePath.deleteExisting()
     }
 
     @Test
     fun `withHCReader() fails on IOException`() {
-        val filePath = Paths.get("unknown.in")
+        val filePath = Path("unknown.in")
 
         assertFailsWith<FileParsingException> {
             withHCReader(filePath) { readProblem() }

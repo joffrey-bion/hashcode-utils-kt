@@ -6,7 +6,7 @@ import org.hildan.hashcode.utils.runner.UncaughtExceptionsLogger
 import org.hildan.hashcode.utils.runner.runInParallel
 import org.hildan.hashcode.utils.writer.writeHCOutputFile
 import java.nio.file.Path
-import java.nio.file.Paths
+import kotlin.io.path.*
 
 /**
  * Reads the input file at [inputFilePath] by calling [readAndSolve], and writes the returned lines to the file at
@@ -34,11 +34,10 @@ fun computeHCOutputPath(inputPath: Path): Path {
     val normalized = inputPath.normalize()
 
     val parent: Path? = normalized.parent
-    val fileName = normalized.fileName
-    val newFileName = fileName.toString().removeSuffix(".in") + ".out"
+    val newFileName = normalized.fileName.toString().removeSuffix(".in") + ".out"
 
     return when {
-        parent == null -> Paths.get(newFileName)
+        parent == null -> Path(newFileName)
         parent.endsWith("inputs") -> parent.resolveSibling("outputs").resolve(newFileName)
         else -> parent.resolve(newFileName)
     }
@@ -64,7 +63,7 @@ suspend fun solveHCFilesInParallel(
         exceptionsLogger = exceptionsLogger,
         remindExceptionsAtTheEnd = remindExceptionsAtTheEnd
     ) {
-        solveHCProblemAndWriteFile(Paths.get(it)) {
+        solveHCProblemAndWriteFile(Path(it)) {
             readAndSolve()
         }
     }

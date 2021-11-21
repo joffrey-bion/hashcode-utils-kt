@@ -3,8 +3,9 @@ package org.hildan.hashcode.utils.writer
 import org.junit.jupiter.api.io.TempDir
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.io.path.exists
+import kotlin.io.path.readLines
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -23,8 +24,8 @@ class HCWriterTest {
 
         writeHCOutputFile(outputFilePath, expectedLines)
 
-        assertTrue(Files.exists(outputFilePath))
-        assertEquals(expectedLines, Files.readAllLines(outputFilePath))
+        assertTrue(outputFilePath.exists())
+        assertEquals(expectedLines, outputFilePath.readLines())
     }
 
     @Test

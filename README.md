@@ -62,11 +62,11 @@ The first thing you need is to read the input file and populate your model class
 For our little example problem, here's how you would parse the input using HashCode Utils:
 
 ```kotlin
-import java.nio.file.Paths
+import kotlin.io.path.Path
 import org.hildan.hashcode.utils.reader.withHCReader
 
-fun main(args: Array<String>) {
-    val inputPath = Paths.get("problem.in")
+fun main() {
+    val inputPath = Path("problem.in")
     val problem = withHCReader(inputPath) { readProblem() }
     
     // solve the problem and write the output
@@ -108,11 +108,12 @@ and monitoring what's going on in order to stop wasting time if things go out of
 In fact, you can do all of the above with a single function call, using `solveHCProblemAndWriteFile`:
 
 ```kotlin
+import kotlin.io.path.Path
 import org.hildan.hashcode.utils.solveHCProblemAndWriteFile
 
-fun main(args: Array<String>) {
-    val inputPath = Paths.get("problem1.in")
-    val outputPath = Paths.get("problem1.out")
+fun main() {
+    val inputPath = Path("problem1.in")
+    val outputPath = Path("problem1.out")
     solveHCProblemAndWriteFile(inputPath, outputPath) { // this: HCReader
         readProblem().solve()
     }
