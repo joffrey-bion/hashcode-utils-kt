@@ -1,6 +1,5 @@
 package org.hildan.hashcode.utils.runner
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.Collections
@@ -25,7 +24,7 @@ suspend fun <I> runInParallel(
     val exceptions = Collections.synchronizedList(mutableListOf<ExecException<I>>())
     coroutineScope {
         inputs.forEach {
-            launch(Dispatchers.Default) {
+            launch {
                 try {
                     block(it)
                 } catch (e: Exception) {
