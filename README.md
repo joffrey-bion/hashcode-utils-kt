@@ -1,6 +1,6 @@
 # Google HashCode utils for Kotlin
 [![Maven central version](https://img.shields.io/maven-central/v/org.hildan.hashcode/hashcode-utils-kt.svg)](http://mvnrepository.com/artifact/org.hildan.hashcode/hashcode-utils-kt)
-[![Github Build](https://img.shields.io/github/workflow/status/joffrey-bion/hashcode-utils-kt/CI%20Build?label=build&logo=github)](https://github.com/joffrey-bion/hashcode-utils-kt/actions?query=workflow%3A%22CI+Build%22)
+[![Github Build](https://img.shields.io/github/actions/workflow/status/joffrey-bion/hashcode-utils-kt/build.yml?label=build&logo=github)](https://github.com/joffrey-bion/hashcode-utils-kt/actions/workflows/build.yml)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/joffrey-bion/hashcode-utils-kt/blob/master/LICENSE)
 
 This library provides useful tools to make your life easier when competing in the Google Hash Code:
