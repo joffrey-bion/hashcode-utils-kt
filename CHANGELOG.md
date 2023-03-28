@@ -1,12 +1,23 @@
 # Change Log
 
+## [1.4.0](https://github.com/joffrey-bion/hashcode-utils-kt/tree/1.4.0) (2023-03-28)
+[View commits](https://github.com/joffrey-bion/hashcode-utils-kt/compare/1.3.0...1.4.0)
+
+**Implemented enhancements:**
+
+- Upgrade to Kotlin 1.8.10 [\#21](https://github.com/joffrey-bion/hashcode-utils-kt/issues/21)
+
+**Upgraded dependencies:**
+
+- Upgrade kotlinx\-coroutines to 1.6.4 [\#22](https://github.com/joffrey-bion/hashcode-utils-kt/issues/22)
+
 ## [1.3.0](https://github.com/joffrey-bion/hashcode-utils-kt/tree/1.3.0) (2022-01-05)
 [View commits](https://github.com/joffrey-bion/hashcode-utils-kt/compare/1.2.0...1.3.0)
 
 **Implemented enhancements:**
 
 - Compile to Java 17 bytecode [\#15](https://github.com/joffrey-bion/hashcode-utils-kt/issues/15)
-- Remove forced \`Default\` dispatcher [\#14](https://github.com/joffrey-bion/hashcode-utils-kt/issues/14)
+- Remove forced `Default` dispatcher [\#14](https://github.com/joffrey-bion/hashcode-utils-kt/issues/14)
 - Upgrade Kotlin coroutines to 1.6.0 [\#13](https://github.com/joffrey-bion/hashcode-utils-kt/issues/13)
 - Upgrade Kotlin to 1.6.10 [\#12](https://github.com/joffrey-bion/hashcode-utils-kt/issues/12)
 
@@ -69,7 +80,7 @@
 
 
 ## [0.1.0](https://github.com/joffrey-bion/hashcode-utils-kt/tree/0.1.0) (2019-02-10)
-[View commits](https://github.com/joffrey-bion/hashcode-utils-kt/compare/d26fe9746e7c335a885d59ed2d34486265e422dc...0.1.0)
+[View commits](https://github.com/joffrey-bion/hashcode-utils-kt/compare/b3b2581cc62916ab3bc4357392c70410ef594329...0.1.0)
 
 **Implemented enhancements:**
 
