@@ -1,3 +1,6 @@
+⚠️ The HashCode competition will no longer be organized by google, so the value of this repository is greatly reduced, and thus the repo is archived. Feel free to reuse the code for some other competitive programming in Kotlin, though.
+
+
 # Google HashCode utils for Kotlin
 [![Maven central version](https://img.shields.io/maven-central/v/org.hildan.hashcode/hashcode-utils-kt.svg)](http://mvnrepository.com/artifact/org.hildan.hashcode/hashcode-utils-kt)
 [![Github Build](https://img.shields.io/github/actions/workflow/status/joffrey-bion/hashcode-utils-kt/build.yml?label=build&logo=github)](https://github.com/joffrey-bion/hashcode-utils-kt/actions/workflows/build.yml)
